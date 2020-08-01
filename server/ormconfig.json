@@ -5,12 +5,12 @@
     "username": "root",
     "password": "root",
     "database": "volt",
-    "synchronize": false,
+    "synchronize": true,
     "logging": ["query", "error"],
     "entities": [
-      "build/entity/*.js"
+      "src/entity/*.ts"
     ],
     "cli": {
-      "entitiesDir": "build/entity"
+      "entitiesDir": "src/entity"
     }
 }
