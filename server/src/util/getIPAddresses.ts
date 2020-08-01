@@ -1,3 +1,5 @@
+import { count } from "console";
+
 export default function () {
     var ipAddresses = [];
 
@@ -11,5 +13,11 @@ export default function () {
             }
         }
     }
-    return ipAddresses;
+
+    if (ipAddresses.length > 0) {
+        return ipAddresses[1]
+    } else {
+        return ipAddresses[0];
+    }
+
 }

@@ -9,7 +9,7 @@ createConnection().then(connection => {
 
     server.listen(3000, () => {
         console.log('Applicação está rodando na porta 3000');
-        console.log('O IP de Atualização é '  + getIPAddresses()[1]);        
+        console.log('O IP de Atualização é '  + getIPAddresses());        
         
     });
 
