@@ -5,7 +5,7 @@
     "username": "root",
     "password": "root",
     "database": "volt",
-    "synchronize": true,
+    "synchronize": false,
     "logging": ["query", "error"],
     "entities": [
       "build/entity/*.js"

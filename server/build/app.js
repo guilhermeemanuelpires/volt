@@ -14,8 +14,7 @@ class App {
         this.express.use(cors());
     }
     routes() {
-        // this.express.use('/usuario', usuarioRouter);
-        console.log('TESTE PASOU AQUI');
+        // this.express.use('/usuario', usuarioRouter);     
     }
 }
 exports.default = new App().express;

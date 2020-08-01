@@ -1,8 +1,7 @@
 import { createConnection } from 'typeorm';
-
 import * as http from 'http';
-
 import app from './app';
+import getIPAddresses from './util/getIPAddresses'
 
 createConnection().then(connection => {
 
@@ -10,6 +9,8 @@ createConnection().then(connection => {
 
     server.listen(3000, () => {
         console.log('Applicação está rodando na porta 3000');
+        console.log('O IP de Atualização é '  + getIPAddresses()[1]);        
+        
     });
 
 }).catch(error => {

@@ -18,8 +18,7 @@ class App {
     }
         
     private routes(): void {
-        // this.express.use('/usuario', usuarioRouter);
-        console.log('TESTE PASOU AQUI');
+        // this.express.use('/usuario', usuarioRouter);     
     }
 
 }
