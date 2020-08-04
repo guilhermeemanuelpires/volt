@@ -12,8 +12,8 @@ export default function MainRoutes() {
   return (
     <Drawer.Navigator>
       <Drawer.Screen
-        name="Main"
-        component={Main}
+        name="FormCli"
+        component={FormCli}
         options={{
           drawerIcon: ({ size }) => (
             <MaterialCommunityIcons name="logout" color="#000" size={size} />
@@ -21,7 +21,7 @@ export default function MainRoutes() {
         }}
       />
       <Drawer.Screen
-        name="Atualizar parametro"
+        name="Database"
         component={Database}
         options={{
           drawerIcon: ({ size }) => (
@@ -29,8 +29,6 @@ export default function MainRoutes() {
           ),
         }}
       />
-      <Drawer.Screen name="Form" component={Form} />
-      <Drawer.Screen name="Formulários de Clientes" component={FormCli} />
     </Drawer.Navigator>
   );
 }
