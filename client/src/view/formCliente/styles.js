@@ -44,13 +44,21 @@ export default styles = StyleSheet.create({
         borderColor: 'red'
     },
     inputRight: {
-        height: 35,
+        height: 45,
         borderRadius: 10,
         paddingLeft: 15,
         paddingRight: 15,
         borderColor: '#D9D9D9',
         borderBottomWidth: 1,
         textAlign: 'right'
+    },
+    inputPiker: {
+        height: 45,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderColor: '#D9D9D9',
+        borderBottomWidth: 1
     },
     botao: {
         margin: 10,
