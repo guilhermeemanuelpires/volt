@@ -2,7 +2,7 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Main from "../view/main/index";
 import Form from "../view/form/index";
-import Database from "../database/iniitDatabase";
+import Database from "../database/index";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Drawer = createDrawerNavigator();

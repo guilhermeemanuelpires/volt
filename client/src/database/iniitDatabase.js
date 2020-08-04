@@ -8,8 +8,6 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { Dropdown } from 'react-native-material-dropdown-v2'
-
 import { DatabaseConnection } from '../database/connection'
 var db = null
 
@@ -71,21 +69,24 @@ const Style = StyleSheet.create({
 });
 
 export default class InitDatabase extends React.Component {
-  async componentDidMount() {
-    const pagantes = ['Douglas', 'Guilherme']
-    this.setState({ pagantes });
+  async listarAll() {
+    const modulos = await listar.getAll();
+    this.setState({ modulos, loading: false })
+    console.log(modulos)
   }
+  
   constructor(props) {
     db = DatabaseConnection.getConnection()
     super(props);
-    this.state = {
-      data: null,
-      nome: "",
-    };
+    state = { modulos: [], loading: true };
     // Verifique se a tabela de itens existe, se não a criar
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, count INT)"
+        "CREATE TABLE IF NOT EXISTS modulo "+
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+        "modelo TEXT, descricao TEXT, potencia DOUBLE"+
+        "area DOUBLE, eficiencia DOUBLE, peso DOUBLE "+
+        "garantia1 INT, garantia2 INT)"
       );
     });
     this.fetchData(); //Metodo de select
@@ -94,7 +95,7 @@ export default class InitDatabase extends React.Component {
     db.transaction((tx) => {
       // enviando 4 argumentos em executeSql
       tx.executeSql(
-        "SELECT * FROM items",
+        "SELECT * FROM modulo",
         null,// passando consulta sql e parâmetros: null
         // retorno de chamada de sucesso que envia duas coisas: objeto de transação e objeto de resultado
         (txObj, { rows: { _array } }) => this.setState({ data: _array })
@@ -105,26 +106,30 @@ export default class InitDatabase extends React.Component {
 
   // function para criar novo item
   newItem = () => {
-    //Validando se input não está vazio
-    if (this.state.nome != "") {
+    let newList = this.state.modulos.map((modulo) => {
+      return { ...modulo, modelo: modulo.modelo, descricao: modulo.descricao  };
+    });
       db.transaction((tx) => {
         tx.executeSql(
-          "INSERT INTO items (text, count) values (?, ?)",
+          "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )"+ 
+          "values (?, ?, ?, ?, ?, ?, ?, ?)",
           [this.state.nome, 0],
           (txObj, resultSet) =>
             this.setState({
               data: this.state.data.concat({
                 id: resultSet.insertId,
-                text: this.state.nome,
-                count: 0,
+                modelo: this.state.nome,
+                potencia: 0,
+                area: 0,
+                eficiencia: 0,
+                peso: 0,
+                garantia1: 0,
+                garantia2: 0
               }),
             }),
           (txObj, error) => console.log("Error", error)
         );
       });
-    } else {
-      Alert.alert("Preencha o campo nome");
-    }
   };
 
   //function update
@@ -172,6 +177,7 @@ export default class InitDatabase extends React.Component {
           <Text style={Style.titulo}> Insira nome</Text>
           <TextInput
             style={Style.input}
+            autoFocus={true} 
             onFocus={() => this.setState({ nome: "" })}
             value={this.state.nome}
             onChangeText={(nome) => this.setState({ nome })}
@@ -180,15 +186,6 @@ export default class InitDatabase extends React.Component {
         <TouchableOpacity onPress={this.newItem} style={Style.buttonAdd}>
           <Text style={Style.txtbutton}>Adicionar</Text>
         </TouchableOpacity>
-        <View>
-
-          <Text style={styles.titulo}>Inserir Registro</Text>
-          <Dropdown
-            label='Selecione um pagante'
-            // value={pagantes.id}
-            data={this.state.pagantes}
-          />
-        </View>
         <ScrollView>
           {this.state.data &&
             this.state.data.map((data) => (
