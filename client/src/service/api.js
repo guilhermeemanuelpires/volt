@@ -1,4 +1,4 @@
-const api = 'http://192.168.0.236:3000/modulo';
+const api = 'http://192.168.0.109:3000/modulo';
 
 async function getAll() {
   try {
