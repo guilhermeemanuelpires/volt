@@ -4,10 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes/index';
 
 
-export default function navinext() {
+export default function volt() {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="light-content" />
+      <StatusBar/>
       <Routes />
     </NavigationContainer>
   );
