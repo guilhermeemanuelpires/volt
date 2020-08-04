@@ -2,7 +2,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 
-import ModuloRouter from './routers/modulo.router';
+import ModuloRouter  from './routers/modulo.router';
+import CidadesRouter from './routers/cidades.router';
 
 class App {
 
@@ -20,7 +21,8 @@ class App {
     }
         
     private routes(): void {
-        this.express.use('/modulo', ModuloRouter);     
+        this.express.use('/modulo', ModuloRouter);
+        this.express.use('/cidades', CidadesRouter);
     }
 
 }
