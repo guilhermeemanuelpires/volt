@@ -3,15 +3,15 @@ import {
   HeaderBackButton,
 } from "@react-navigation/stack";
 import { Button, Image } from "react-native";
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 import Form from "../view/form/index";
-import Main from "../view/main/index";
 import Database from "../database/iniitDatabase";
 import MainRoutes from "./Main.routes";
+import FormCli from "../view/formCliente/index";
 import React from "react";
 import { DrawerActions } from "@react-navigation/native";
-
 const Stack = createStackNavigator();
-
 const MyCustomHeaderBackImage = () => (
   <Image
     source={require("../../assets/menu.png")}
@@ -81,7 +81,14 @@ export default function Routes() {
           },
           headerBackTitleVisible: false,
         })}
-      />
+=======
+      initialRouteName="Main"
+    >
+      <Stack.Screen
+        name="Form"
+        component={Form}  
+        options={{ title: 'Form' }}
+      />  
     </Stack.Navigator>
   );
 }

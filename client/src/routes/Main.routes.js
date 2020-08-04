@@ -1,9 +1,10 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import Main from "../view/main/index";
+import { Button } from "react-native";
 import Form from "../view/form/index";
 import Database from "../database/index";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FormCli from "../view/formCliente/index";
 
 const Drawer = createDrawerNavigator();
 
@@ -20,7 +21,7 @@ export default function MainRoutes() {
         }}
       />
       <Drawer.Screen
-        name="Database"
+        name="Atualizar parametro"
         component={Database}
         options={{
           drawerIcon: ({ size }) => (
@@ -28,6 +29,8 @@ export default function MainRoutes() {
           ),
         }}
       />
+      <Drawer.Screen name="Form" component={Form} />
+      <Drawer.Screen name="Formulários de Clientes" component={FormCli} />
     </Drawer.Navigator>
   );
 }
