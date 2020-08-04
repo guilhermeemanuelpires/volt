@@ -4,22 +4,37 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableHighlight,
+  TouchableOpacity,
   Picker
 } from "react-native";
 
 import Style from "./styles";
+import styles from "./styles";
+
 
 export default class FormCli extends Component {
 
-  async componentDidMount() {
-    const cidades = ['Dois Vizinhos', 'Pato Branco', 'Teste']
-    this.setState({ cidades });
+  constructor(props) {
+    super(props);
+    this.state = {
+      finame: 'Sem Finame',
+      nome: '',
+      cidade: ''
+    }
+  }
+
+  state = {
+    bntEnable: false,
+    active: true
+  }
+
+  _Submit() {
+    alert('Em Desenvolvimento');
   }
 
   render() {
-    return (
 
+    return (
       <View style={Style.container}>
 
         <Text style={Style.titulo}>Dados Do Cliente</Text>
@@ -29,21 +44,25 @@ export default class FormCli extends Component {
 
             <Text style={Style.alinhaLabel}>Finame</Text>
             <TextInput
+              style={Style.input}
               placeholder='Sem Finame'
               value='Sem Finame'
-              readonly
-              style={Style.input}
+              editable={false}
             />
 
             <Text style={Style.alinhaLabel}>Nome Cliente</Text>
             <TextInput
-              style={Style.input}
+              style={this.active ? Style.inputInvalido : Style.input}
+              onFocus={(valeu) => { this.setState({ active: valeu }) }}
+              onChangeText={(texto) => this.setState({ nome: texto })}
+              value={this.state.nome}
             />
 
-            <Text style={Style.alinhaLabel}>CFP/CNPJ</Text>
+            <Text style={Style.alinhaLabel}>CPF/CNPJ</Text>
             <TextInput
               keyboardType='numeric'
               style={Style.input}
+              ref={(input) => { this.secondTextInput = input; }}
             />
 
             <Text style={Style.alinhaLabel}>Contato</Text>
@@ -63,24 +82,48 @@ export default class FormCli extends Component {
               style={Style.input}
             />
 
-              {/* <View >
-                <Text style={Style.alinhaLabel}>Cidade</Text>
+            <Text style={Style.alinhaLabel}>Cidade </Text>
+            <View style={styles.grupo}>
+              <View style={{ flex: 0.8 }} >
+                {/* Aqui vai o Piker  */}
+
                 <Picker
-                  selectedValue={selectedValue}
-                  style={{ height: 50, width: 150 }}
-                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                  selectedValue={this.state.cidade}
+                  onValueChange={(itemValor, itemindex) => {
+                    this.setState({ cidade: itemValor })
+                  }}
                 >
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
+                  <Picker.Item label="Selecione a Cidade" value="" />
+                  <Picker.Item label="Dois Viznhos" value="999" />
+                  <Picker.Item label="Pato Branco" value="888" />
                 </Picker>
-              </View> */}
+
+                {/* <TextInput style={Style.input} /> */}
+              </View>
+              <View style={{ flex: 0.3 }} >
+                <TextInput
+                  keyboardType='numeric'
+                  style={Style.inputRight}
+                  value={this.state.cidade}
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={this.state.active ? styles.btnActive : styles.btn}
+              onPress={() => this.setState({ active: !this.state.active })}>
+
+            </TouchableOpacity>
 
           </View>
         </ScrollView>
 
-        <TouchableHighlight style={Style.botao}>
-          <Text style={Style.alinhaLabel} >Salvar</Text>
-        </TouchableHighlight>
+        <TouchableOpacity style={Style.botao}
+          onPress={this._Submit}
+          disabled={this.state.bntEnable}
+        >
+          <Text style={Style.labelBotao}>Prosseguir</Text>
+        </TouchableOpacity>
 
       </View>
     );

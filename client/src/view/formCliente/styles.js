@@ -8,22 +8,26 @@ export default styles = StyleSheet.create({
     titulo: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 25,
-        padding: 20
+        fontSize: 20,
+        paddingTop: 15,
+        paddingBottom: 15
     },
     ajustaCampos: {
-        paddingLeft: 15,
-        paddingRight: 15
+        paddingLeft: 10,
+        paddingRight: 10
     },
     alinhaLabel: {
         marginTop: 5,
-        fontSize: 15,
+        fontSize: 14,
         paddingLeft: 10,
         color: '#0D0D0D',
         fontWeight: 'bold',
     },
+    grupo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     input: {
-        // marginTop: 1,
         height: 35,
         borderRadius: 10,
         paddingLeft: 15,
@@ -31,11 +35,34 @@ export default styles = StyleSheet.create({
         borderColor: '#D9D9D9',
         borderBottomWidth: 1
     },
+    inputInvalido: {
+        height: 35,
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderColor: 'red'
+    },
+    inputRight: {
+        height: 35,
+        borderRadius: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderColor: '#D9D9D9',
+        borderBottomWidth: 1,
+        textAlign: 'right'
+    },
     botao: {
-        justifyContent: 'center',
-        marginTop: 10,
+        margin: 10,
         height: 50,
-        // borderRadius: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        backgroundColor: '#11BF4E'
+    },
+    labelBotao: {
+        fontSize: 18,
+        textAlign: "center",
+        fontWeight: 'bold',
+        color: '#FFFFFF'
     }
-
 });
