@@ -1,5 +1,3 @@
-
-
 async function getAll(ip) {
   try {
     const api = 'http://'+ip+':3000/modulo';

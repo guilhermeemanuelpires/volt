@@ -19,13 +19,25 @@ export default class FormCli extends Component {
     this.state = {
       finame: 'Sem Finame',
       nome: '',
-      cidade: ''
+      cidadeSel: '0,00',
+      cidades: [{ "nome": "Selecione uma Cidade", "distancia": '0' }, { "nome": "Dois Vizinhos", "distancia": "999" }, { "nome": "Pato Branco", "distancia": "888" }]
     }
   }
 
   state = {
     bntEnable: false,
     active: true
+  }
+
+  pickerChange(index) {
+    this.state.cidades.map((v, i) => {
+      if (index === i) {
+        this.setState({
+          cidadeSel: this.state.cidades[index].distancia
+        })
+      }
+    })
+
   }
 
   _Submit() {
@@ -86,35 +98,26 @@ export default class FormCli extends Component {
             <Text style={Style.alinhaLabel}>Cidade </Text>
             <View style={styles.grupo}>
               <View style={{ flex: 0.8 }} >
-                {/* Aqui vai o Piker  */}
-
-                <Picker
-                  selectedValue={this.state.cidade}
-                  onValueChange={(itemValor, itemindex) => {
-                    this.setState({ cidade: itemValor })
-                  }}
-                >
-                  <Picker.Item label="Selecione a Cidade" value="" />
-                  <Picker.Item label="Dois Viznhos" value="999" />
-                  <Picker.Item label="Pato Branco" value="888" />
-                </Picker>
-
-                {/* <TextInput style={Style.input} /> */}
+                <View style={Style.inputPiker}>
+                  <Picker
+                    selectedValue={this.state.cidadeSel}
+                    onValueChange={(itemValor, itemindex) => this.pickerChange(itemindex)}>{
+                      this.state.cidades.map((v) => {
+                        return <Picker.Item label={v.nome} value={v.distancia} />
+                      })
+                    }
+                  </Picker>
+                </View>
               </View>
               <View style={{ flex: 0.3 }} >
                 <TextInput
                   keyboardType='numeric'
+                  editable={false}
                   style={Style.inputRight}
-                  value={this.state.cidade}
+                  value={this.state.cidadeSel}
                 />
               </View>
             </View>
-
-            <TouchableOpacity
-              style={this.state.active ? styles.btnActive : styles.btn}
-              onPress={() => this.setState({ active: !this.state.active })}>
-
-            </TouchableOpacity>
 
           </View>
         </ScrollView>
