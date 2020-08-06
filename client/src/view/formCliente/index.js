@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Picker
 } from "react-native";
-
+import { useNavigation } from '@react-navigation/native';
 import Style from "./styles";
 import styles from "./styles";
 
-
 export default class FormCli extends Component {
-
+  
   constructor(props) {
+    
     super(props);
     this.state = {
       finame: 'Sem Finame',
@@ -44,8 +44,9 @@ export default class FormCli extends Component {
     alert('Em Desenvolvimento');
   }
 
-  render() {
 
+  render() {
+    const { navigation } = this.props;
     return (
       <View style={Style.container}>
 
