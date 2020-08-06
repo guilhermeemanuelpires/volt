@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { DatabaseConnection } from '../database/connection'
+import listar from "../service/api"
 var db = null
 
 const Style = StyleSheet.create({
@@ -69,23 +70,25 @@ const Style = StyleSheet.create({
 });
 
 export default class InitDatabase extends React.Component {
-  async listarAll() {
-    const modulos = await listar.getAll();
-    this.setState({ modulos, loading: false })
-    console.log(modulos)
-  }
+  state = { modulos: [], loading: true, ip:'' };
+  listarALL = async () => {
+    console.log('IP '+this.state.ip)
+    const modulos = await listar.getAll(this.state.ip);
+    this.setState({ modulos })
+    console.log(this.state.modulos)
+    // this.fetchData(); 
+}
   
   constructor(props) {
     db = DatabaseConnection.getConnection()
-    super(props);
-    state = { modulos: [], loading: true };
+    super(props);    
     // Verifique se a tabela de itens existe, se não a criar
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS modulo "+
         "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-        "modelo TEXT, descricao TEXT, potencia DOUBLE"+
-        "area DOUBLE, eficiencia DOUBLE, peso DOUBLE "+
+        "modelo TEXT, descricao TEXT, potencia DOUBLE,"+
+        "area DOUBLE, eficiencia DOUBLE, peso DOUBLE,"+
         "garantia1 INT, garantia2 INT)"
       );
     });
@@ -103,59 +106,54 @@ export default class InitDatabase extends React.Component {
       ); // fim execucao SQL
     }); // fim da transacao
   };
-
-  // function para criar novo item
-  newItem = () => {
-    let newList = this.state.modulos.map((modulo) => {
-      return { ...modulo, modelo: modulo.modelo, descricao: modulo.descricao  };
-    });
-      db.transaction((tx) => {
-        tx.executeSql(
-          "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )"+ 
-          "values (?, ?, ?, ?, ?, ?, ?, ?)",
-          [this.state.nome, 0],
-          (txObj, resultSet) =>
-            this.setState({
-              data: this.state.data.concat({
-                id: resultSet.insertId,
-                modelo: this.state.nome,
-                potencia: 0,
-                area: 0,
-                eficiencia: 0,
-                peso: 0,
-                garantia1: 0,
-                garantia2: 0
-              }),
-            }),
-          (txObj, error) => console.log("Error", error)
-        );
-      });
-  };
-
-  //function update
-  increment = (id) => {
+  derreter() {
     db.transaction((tx) => {
       tx.executeSql(
-        "UPDATE items SET count = count + 1 WHERE id = ?",
-        [id],
-        (txObj, resultSet) => {
-          if (resultSet.rowsAffected > 0) {
-            let newList = this.state.data.map((data) => {
-              if (data.id === id) return { ...data, count: data.count + 1 };
-              else return data;
-            });
-            this.setState({ data: newList });
-          }
-        }
+        "DROP TABLE modulo "
       );
     });
+  }
+  // function para criar novo item
+  newItem = async () => {
+    if(this.state.ip != ''){
+      const modulos = await listar.getAll(this.state.ip);
+      this.setState({ modulos })
+      db.transaction((tx) => {
+      for (let x = 0; x < this.state.modulos.length; x++) {
+          tx.executeSql(
+            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )"+ 
+            "values (?, ?, ?, ?, ?, ?, ?, ?)",
+            [ this.state.modulos[x].modelo, this.state.modulos[x].descricao, this.state.modulos[x].potencia,
+            this.state.modulos[x].area, this.state.modulos[x].eficiencia, this.state.modulos[x].peso,
+            this.state.modulos[x].garantia1, this.state.modulos[x].garantia2 ],
+            (txObj, resultSet) =>
+              this.setState({
+                data: this.state.data.concat({
+                  id: resultSet.insertId,
+                  modelo: this.state.modulos[x].modelo,
+                  potencia: this.state.modulos[x].potencia,
+                  area: this.state.modulos[x].area,
+                  eficiencia: this.state.modulos[x].eficiencia,
+                  peso: this.state.modulos[x].peso,
+                  garantia1: this.state.modulos[x].garantia1,
+                  garantia2: this.state.modulos[x].garantia2
+                }),
+              }),
+            (txObj, error) => console.log("Error", error)
+          ); 
+        }
+      });
+    }else{
+      alert("Preenche o campo iP")
+    }
+
   };
 
   //Function delete
   delete = (id) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "DELETE FROM items WHERE id = ? ",
+        "DELETE FROM modulo WHERE id = ? ",
         [id],
         (txObj, resultSet) => {
           if (resultSet.rowsAffected > 0) {
@@ -174,13 +172,14 @@ export default class InitDatabase extends React.Component {
       <View style={Style.container}>
         <Text style={Style.titulo}>Teste SQLITE</Text>
         <View>
-          <Text style={Style.titulo}> Insira nome</Text>
+          <Text style={Style.titulo}> Insira o IP</Text>
           <TextInput
             style={Style.input}
             autoFocus={true} 
-            onFocus={() => this.setState({ nome: "" })}
-            value={this.state.nome}
-            onChangeText={(nome) => this.setState({ nome })}
+            // onFocus={() => this.setState({ ip: "" })}
+            value={this.state.ip}
+            onChangeText={ip => this.setState({ ip })}
+            keyboardType="numeric"
           />
         </View>
         <TouchableOpacity onPress={this.newItem} style={Style.buttonAdd}>
@@ -191,14 +190,8 @@ export default class InitDatabase extends React.Component {
             this.state.data.map((data) => (
               <View key={data.id} style={Style.item}>
                 <Text>
-                {data.id} {data.text} - {data.count}
+                {data.id} {data.descricao} - {data.area}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => this.increment(data.id)}
-                  style={Style.buttonEdit}
-                >
-                  <Text style={{ color: "green" }}> + </Text>
-                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => this.delete(data.id)}
                   style={Style.buttonExc}

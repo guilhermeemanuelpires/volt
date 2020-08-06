@@ -4,6 +4,7 @@ import {
 } from "@react-navigation/stack";
 import { Button, Image } from "react-native";
 import FormCli from "../view/formCliente/index";
+import Form from "../view/form/index";
 import Database from "../database/iniitDatabase";
 import MainRoutes from "./Main.routes";
 import React from "react";
@@ -39,6 +40,7 @@ export default function Routes() {
       // }}
     >
       <Stack.Screen name="Database" component={Database} />
+      <Stack.Screen name="Form" component={Form} />
       <Stack.Screen
         name="FormCli"
         component={MainRoutes}

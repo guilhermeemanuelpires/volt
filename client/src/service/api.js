@@ -1,7 +1,9 @@
-const api = 'http://192.168.0.236:3000/modulo';
 
-async function getAll() {
+
+async function getAll(ip) {
   try {
+    const api = 'http://'+ip+':3000/modulo';
+    console.log(api)
     const response = await fetch(api);
     const responseJson = await response.json();
     return responseJson['Modulo'];
