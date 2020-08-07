@@ -8,9 +8,8 @@ import {
   Picker
 } from "react-native";
 
-import Style from "./styles";
-import styles from "./styles";
-
+import Style from "../styles/styles";
+import Dropdow from "../components/dropdown/index";
 
 export default class FormCli extends Component {
 
@@ -18,9 +17,11 @@ export default class FormCli extends Component {
     super(props);
     this.state = {
       finame: 'Sem Finame',
-      nome: '',
-      cidadeSel: '0,00',
-      cidades: [{ "nome": "Selecione uma Cidade", "distancia": '0' }, { "nome": "Dois Vizinhos", "distancia": "999" }, { "nome": "Pato Branco", "distancia": "888" }]
+      nome: '',      
+      cidadeSel: '',
+      cidades: [{ "id": "0", "nome": "Selecione uma Cidade", "distancia": '0' },
+                { "id": "1", "nome": "Dois Vizinhos", "distancia": "999" },
+                { "id": "3", "nome": "Pato Branco", "distancia": "888" }]
     }
   }
 
@@ -29,19 +30,12 @@ export default class FormCli extends Component {
     active: true
   }
 
-  pickerChange(index) {
-    this.state.cidades.map((v, i) => {
-      if (index === i) {
-        this.setState({
-          cidadeSel: this.state.cidades[index].distancia
-        })
-      }
-    })
-
+  setCidadeSel = (cidadeSel) => {
+    this.setState({ cidadeSel });
   }
 
   _Submit() {
-    alert('Em Desenvolvimento');
+    this.props.navigation.navigate('formConfOrcamento');
   }
 
   render() {
@@ -95,18 +89,17 @@ export default class FormCli extends Component {
             />
 
             <Text style={Style.alinhaLabel}>Cidade </Text>
-            <View style={styles.grupo}>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ flex: 0.8 }} >
-                <View style={Style.inputPiker}>
-                  <Picker
-                    selectedValue={this.state.cidadeSel}
-                    onValueChange={(itemValor, itemindex) => this.pickerChange(itemindex)}>{
-                      this.state.cidades.map((v) => {
-                        return <Picker.Item label={v.nome} value={v.distancia} />
-                      })
-                    }
-                  </Picker>
-                </View>
+                <Dropdow
+                  descricao="nome"
+                  lista={this.state.cidades}
+                  sel={this.state.cidadeSel}
+                  handleClick={this.setCidadeSel} />
+
               </View>
               <View style={{ flex: 0.3 }} >
                 <TextInput
@@ -122,7 +115,7 @@ export default class FormCli extends Component {
         </ScrollView>
 
         <TouchableOpacity style={Style.botao}
-          onPress={this._Submit}
+          onPress={() => { this._Submit() }}
           disabled={this.state.bntEnable}
         >
           <Text style={Style.labelBotao}>Prosseguir</Text>
