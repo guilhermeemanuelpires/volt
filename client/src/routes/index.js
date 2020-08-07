@@ -4,7 +4,7 @@ import {
 } from "@react-navigation/stack";
 import { Button, Image } from "react-native";
 import FormCli from "../view/formCliente/index";
-import Form from "../view/form/index";
+import formConfOrcamento from "../view/formConfOrcamento/index";
 import Database from "../database/iniitDatabase";
 import MainRoutes from "./Main.routes";
 import React from "react";
@@ -30,14 +30,14 @@ export default function Routes() {
   return (
     <Stack.Navigator
       initialRouteName="FormCli"
-      // screenOptions={{
-      //   headerStyle: {
-      //     backgroundColor: "#7159c1",
-      //   },
-      //   headerTitleStyle: { alignSelf: "center" },
-      //   headerTintColor: "#ffff",
+    // screenOptions={{
+    //   headerStyle: {
+    //     backgroundColor: "#7159c1",
+    //   },
+    //   headerTitleStyle: { alignSelf: "center" },
+    //   headerTintColor: "#ffff",
 
-      // }}
+    // }} 
     >
       <Stack.Screen name="Database" component={Database} />
       <Stack.Screen name="Form" component={Form} />
@@ -51,8 +51,8 @@ export default function Routes() {
           headerLeft: () => (
             <HeaderBackButton
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-             title="Info"
-              
+              title="Info"
+
             />
           ),
           headerTintColor: "#fff",
@@ -64,7 +64,13 @@ export default function Routes() {
           headerBackTitleVisible: false,
         })}
       />
-          
+      <Stack.Screen
+        name="formConfOrcamento"
+        component={formConfOrcamento}
+        options={({ navigation }) => ({
+          title: "Volt Orçamento"
+        })}
+      />
     </Stack.Navigator>
   );
 }
