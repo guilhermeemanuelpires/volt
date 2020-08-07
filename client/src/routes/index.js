@@ -40,6 +40,7 @@ export default function Routes() {
     // }} 
     >
       <Stack.Screen name="Database" component={Database} />
+      <Stack.Screen name="Form" component={Form} />
       <Stack.Screen
         name="FormCli"
         component={MainRoutes}

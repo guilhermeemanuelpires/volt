@@ -10,10 +10,14 @@ import {
 
 import Style from "../styles/styles";
 import Dropdow from "../components/dropdown/index";
+import { useNavigation } from '@react-navigation/native';
+import Style from "./styles";
+import styles from "./styles";
 
 export default class FormCli extends Component {
-
+  
   constructor(props) {
+    
     super(props);
     this.state = {
       finame: 'Sem Finame',
@@ -38,8 +42,9 @@ export default class FormCli extends Component {
     this.props.navigation.navigate('formConfOrcamento');
   }
 
-  render() {
 
+  render() {
+    const { navigation } = this.props;
     return (
       <View style={Style.container}>
 
