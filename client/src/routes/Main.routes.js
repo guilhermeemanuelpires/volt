@@ -1,7 +1,5 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Button } from "react-native";
-import Form from "../view/form/index";
 import Database from "../database/iniitDatabase";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormCli from "../view/formCliente/index";
