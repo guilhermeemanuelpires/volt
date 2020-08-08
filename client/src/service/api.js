@@ -1,12 +1,12 @@
 async function getAll(ip) {
   try {
-    const api = 'http://'+ip+':3000/modulo';
-    console.log(api)
+    const api = "http://" + ip + ":3000/modulo";
     const response = await fetch(api);
     const responseJson = await response.json();
-    return responseJson['Modulo'];
+    return responseJson["Modulo"];
   } catch (error) {
-    console.error(error);
+    alert("Erro na requisição");
+    return "Error";
   }
 }
 
