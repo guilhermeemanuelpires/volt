@@ -4,7 +4,7 @@ import {
 } from "@react-navigation/stack";
 import { Button, Image, TouchableOpacity } from "react-native";
 import FormCli from "../view/formCliente/index";
-import Form from "../view/form/index";
+import formConfOrcamento from "../view/formConfOrcamento/index";
 import Database from "../database/iniitDatabase";
 import MainRoutes from "./Main.routes";
 import React from "react";
@@ -50,6 +50,13 @@ export default function Routes() {
             shadowColor: "transparent",
           },
           headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="formConfOrcamento"
+        component={formConfOrcamento}
+        options={({ navigation }) => ({
+          title: "Volt Orçamento"
         })}
       />
     </Stack.Navigator>
