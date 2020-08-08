@@ -35,13 +35,14 @@ export default styles = StyleSheet.create({
         borderColor: '#D9D9D9',
         borderBottomWidth: 1
     },
-    inputInvalido: {
+    inputSelected: {
         height: 35,
         borderBottomWidth: 1,
         borderRadius: 10,
         paddingLeft: 15,
         paddingRight: 15,
-        borderColor: 'red'
+        borderColor: '#51ACFF',
+
     },
     inputRight: {
         height: 45,
@@ -65,7 +66,35 @@ export default styles = StyleSheet.create({
         height: 50,
         borderRadius: 10,
         justifyContent: 'center',
-        backgroundColor: '#11BF4E'
+        backgroundColor: '#11BF4E',
+        shadowColor: "#000",
+
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+
+        elevation: 12,
+    },
+    botaoDisabled: {
+        margin: 10,
+        height: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        backgroundColor: '#060606',
+        shadowColor: "#000",
+
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+
+        elevation: 12,
+        opacity: 0.3,
     },
     labelBotao: {
         fontSize: 18,

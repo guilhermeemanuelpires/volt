@@ -26,7 +26,7 @@ export default function Routes() {
     <Stack.Navigator
       initialRouteName="FormCli"
     >
-      <Stack.Screen name="Database" component={Database} />
+      <Stack.Screen name="Database" component={Database} />      
       <Stack.Screen
         name="FormCli"
         component={MainRoutes}
