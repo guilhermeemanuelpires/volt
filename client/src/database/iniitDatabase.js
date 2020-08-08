@@ -8,9 +8,10 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { DatabaseConnection } from '../database/connection'
-import listar from "../service/api"
-var db = null
+// import TextInputMask from "react-native-text-input-mask";
+import { DatabaseConnection } from "../database/connection";
+import listar from "../service/api";
+var db = null;
 
 const Style = StyleSheet.create({
   container: {
@@ -70,26 +71,29 @@ const Style = StyleSheet.create({
 });
 
 export default class InitDatabase extends React.Component {
-  state = { modulos: [], loading: true, ip:'' };
+  state = { modulos: [], loading: true, ip: "" };
   listarALL = async () => {
-    console.log('IP '+this.state.ip)
     const modulos = await listar.getAll(this.state.ip);
-    this.setState({ modulos })
-    console.log(this.state.modulos)
-    // this.fetchData(); 
-}
-  
+    if (modulos) {
+      alert("Erro!!");
+    } else {
+      this.setState({ modulos });
+      console.log(this.state.modulos);
+    }
+    // this.fetchData();
+  };
+
   constructor(props) {
-    db = DatabaseConnection.getConnection()
-    super(props);    
+    db = DatabaseConnection.getConnection();
+    super(props);
     // Verifique se a tabela de itens existe, se não a criar
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS modulo "+
-        "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-        "modelo TEXT, descricao TEXT, potencia DOUBLE,"+
-        "area DOUBLE, eficiencia DOUBLE, peso DOUBLE,"+
-        "garantia1 INT, garantia2 INT)"
+        "CREATE TABLE IF NOT EXISTS modulo " +
+          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+          "modelo TEXT, descricao TEXT, potencia DOUBLE," +
+          "area DOUBLE, eficiencia DOUBLE, peso DOUBLE," +
+          "garantia1 INT, garantia2 INT)"
       );
     });
     this.fetchData(); //Metodo de select
@@ -99,7 +103,7 @@ export default class InitDatabase extends React.Component {
       // enviando 4 argumentos em executeSql
       tx.executeSql(
         "SELECT * FROM modulo",
-        null,// passando consulta sql e parâmetros: null
+        null, // passando consulta sql e parâmetros: null
         // retorno de chamada de sucesso que envia duas coisas: objeto de transação e objeto de resultado
         (txObj, { rows: { _array } }) => this.setState({ data: _array })
         // retorno de chamada de falha que envia duas coisas, objeto de transação e erro
@@ -108,24 +112,29 @@ export default class InitDatabase extends React.Component {
   };
   derreter() {
     db.transaction((tx) => {
-      tx.executeSql(
-        "DROP TABLE modulo "
-      );
+      tx.executeSql("DROP TABLE modulo ");
     });
   }
   // function para criar novo item
   newItem = async () => {
-    if(this.state.ip != ''){
+    if (this.state.ip != "") {
       const modulos = await listar.getAll(this.state.ip);
-      this.setState({ modulos })
+      this.setState({ modulos });
       db.transaction((tx) => {
-      for (let x = 0; x < this.state.modulos.length; x++) {
+        for (let x = 0; x < this.state.modulos.length; x++) {
           tx.executeSql(
-            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )"+ 
-            "values (?, ?, ?, ?, ?, ?, ?, ?)",
-            [ this.state.modulos[x].modelo, this.state.modulos[x].descricao, this.state.modulos[x].potencia,
-            this.state.modulos[x].area, this.state.modulos[x].eficiencia, this.state.modulos[x].peso,
-            this.state.modulos[x].garantia1, this.state.modulos[x].garantia2 ],
+            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
+              "values (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+              this.state.modulos[x].modelo,
+              this.state.modulos[x].descricao,
+              this.state.modulos[x].potencia,
+              this.state.modulos[x].area,
+              this.state.modulos[x].eficiencia,
+              this.state.modulos[x].peso,
+              this.state.modulos[x].garantia1,
+              this.state.modulos[x].garantia2,
+            ],
             (txObj, resultSet) =>
               this.setState({
                 data: this.state.data.concat({
@@ -136,17 +145,16 @@ export default class InitDatabase extends React.Component {
                   eficiencia: this.state.modulos[x].eficiencia,
                   peso: this.state.modulos[x].peso,
                   garantia1: this.state.modulos[x].garantia1,
-                  garantia2: this.state.modulos[x].garantia2
+                  garantia2: this.state.modulos[x].garantia2,
                 }),
               }),
             (txObj, error) => console.log("Error", error)
-          ); 
+          );
         }
       });
-    }else{
-      alert("Preenche o campo iP")
+    } else {
+      alert("Preenche o campo iP");
     }
-
   };
 
   //Function delete
@@ -173,12 +181,27 @@ export default class InitDatabase extends React.Component {
         <Text style={Style.titulo}>Teste SQLITE</Text>
         <View>
           <Text style={Style.titulo}> Insira o IP</Text>
+          {/* <TextInputMask
+            refInput={(ref) => {
+              this.input = ref;
+            }}
+            
+            value={this.state.ip}
+            keyboardType="numeric"
+            onChangeText={
+              (ip) => this.setState({ ip })
+              (formatted, extracted) => {
+              console.log(formatted); // +1 (123) 456-78-90
+              console.log(extracted); // 1234567890
+            }}
+            mask={"+1 ([000]) [000] [00] [00]"}
+          /> */}
           <TextInput
             style={Style.input}
-            autoFocus={true} 
+            autoFocus={true}
             // onFocus={() => this.setState({ ip: "" })}
             value={this.state.ip}
-            onChangeText={ip => this.setState({ ip })}
+            onChangeText={(ip) => this.setState({ ip })}
             keyboardType="numeric"
           />
         </View>
@@ -190,7 +213,7 @@ export default class InitDatabase extends React.Component {
             this.state.data.map((data) => (
               <View key={data.id} style={Style.item}>
                 <Text>
-                {data.id} {data.descricao} - {data.area}
+                  {data.id} {data.descricao} - {data.area}
                 </Text>
                 <TouchableOpacity
                   onPress={() => this.delete(data.id)}
@@ -205,4 +228,3 @@ export default class InitDatabase extends React.Component {
     );
   }
 }
-
