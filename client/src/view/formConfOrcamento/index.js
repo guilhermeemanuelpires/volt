@@ -9,6 +9,7 @@ import {
 
 import Style from "../styles/styles";
 import Dropdow from "../components/dropdown/index";
+import InputPattern from "../components/InputPattern/index";
 
 export default class formConfOrcamento extends Component {
 
@@ -18,15 +19,35 @@ export default class formConfOrcamento extends Component {
             tipoRedeSel: '',
             tipoRedes: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "teste" }, { "id": "2", "descricao": "teste02" }],
 
+            tarifaSel: '',
+            tarifas: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "teste" }, { "id": "2", "descricao": "teste02" }],
+
             disjuntorSel: '',
             disjuntores: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }],
 
             instalacaoSel: '',
             tipoInstalacao: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }],
 
+            mediaConsumoMes: '',
+            taxaPerda: '',
+
             moduloSel: '',
-            modulos: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }]
+            modulos: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }],
+
+            numeroModulos: '',
+            calculoPotenciaSistema: '',
+            calculoPotenciaInstalada: '',
+            valorFinal: '',
+            valorKW: ''
         }
+    }
+
+    setTaxaPerda = (taxaPerda) => {
+        this.setState({ taxaPerda });
+    }
+
+    setMediaConsumoMes = (mediaConsumoMes) => {
+        this.setState({ mediaConsumoMes });
     }
 
     setTipoRedeSel = (tipoRedeSel) => {
@@ -37,12 +58,36 @@ export default class formConfOrcamento extends Component {
         this.setState({ disjuntorSel });
     }
 
+    setTarifaSel = (tarifaSel) => {
+        this.setState({ tarifaSel });
+    }
+
     setInstalacaoSel = (instalacaoSel) => {
         this.setState({ instalacaoSel });
     }
 
     setModuloSel = (moduloSel) => {
         this.setState({ moduloSel });
+    }
+
+    setNumeroModulos = (numeroModulos) => {
+        this.setState({ numeroModulos });
+    }
+
+    setCalculoPotenciaSistema = (calculoPotenciaSistema) => {
+        this.setState({ calculoPotenciaSistema });
+    }
+
+    setCalculoPotenciaInstalada = () => {
+        this.setState({ calculoPotenciaInstalada });
+    }
+
+    setValorFinal = (valorFinal) => {
+        this.setState({ valorFinal });
+    }
+
+    setValorKW = (valorKW) => {
+        this.setState({ valorKW });
     }
 
     _Submit() {
@@ -65,6 +110,14 @@ export default class formConfOrcamento extends Component {
                             sel={this.state.tipoRedeSel}
                             handleClick={this.setTipoRedeSel} />
 
+
+                        <Text style={Style.alinhaLabel}>Tarifa</Text>
+                        <Dropdow
+                            descricao="descricao"
+                            lista={this.state.tarifas}
+                            sel={this.state.tarifaSel}
+                            handleClick={this.setTarifaSel} />
+
                         <Text style={Style.alinhaLabel}>Disjuntor</Text>
                         <Dropdow
                             descricao="descricao"
@@ -80,9 +133,17 @@ export default class formConfOrcamento extends Component {
                             handleClick={this.setInstalacaoSel} />
 
                         <Text style={Style.alinhaLabel}>Média de Consumo Mês</Text>
-                        <TextInput
+                        <InputPattern
                             keyboardType='numeric'
-                            style={Style.input}
+                            value={this.state.mediaConsumoMes}
+                            handleClick={this.setMediaConsumoMes}
+                        />
+
+                        <Text style={Style.alinhaLabel}>Taxa Perda</Text>
+                        <InputPattern
+                            keyboardType='numeric'
+                            value={this.state.taxaPerda}
+                            handleClick={this.setTaxaPerda}
                         />
 
                         <Text style={Style.alinhaLabel}>Módulo</Text>
@@ -98,7 +159,7 @@ export default class formConfOrcamento extends Component {
                                     handleClick={this.setModuloSel} />
 
                             </View>
-                            <View style={{ flex: 0.3 }} >
+                            <View style={{ flex: 0.4 }} >
                                 <TextInput
                                     keyboardType='numeric'
                                     editable={false}
@@ -109,22 +170,55 @@ export default class formConfOrcamento extends Component {
                         </View>
 
                         <Text style={Style.alinhaLabel}>Número de Modulos</Text>
-                        <TextInput
+                        <InputPattern
                             keyboardType='numeric'
-                            style={Style.input}
+                            editable={false}
+                            value={this.state.numeroModulos}
+                            handleClick={this.setNumeroModulos}
                         />
 
                         <Text style={Style.alinhaLabel}>Cálculo da Potência do Sistema</Text>
-                        <TextInput
+                        <InputPattern
                             keyboardType='numeric'
-                            style={Style.input}
+                            editable={false}
+                            value={this.state.calculoPotenciaSistema}
+                            handleClick={this.setCalculoPotenciaSistema}
                         />
 
                         <Text style={Style.alinhaLabel}>Cálculo da potência instalada</Text>
-                        <TextInput
+                        <InputPattern
                             keyboardType='numeric'
-                            style={Style.input}
+                            editable={false}
+                            value={this.state.calculoPotenciaInstalada}
+                            handleClick={this.setCalculoPotenciaInstalada}
                         />
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}>
+                            <View style={{ flex: 0.6 }} >
+
+                                <Text style={Style.alinhaLabel}>Valor Final</Text>
+                                <InputPattern
+                                    keyboardType='numeric'
+                                    editable={false}
+                                    value={this.state.valorFinal}
+                                    handleClick={this.setValorFinal}
+                                />
+                            </View>
+                            <View style={{ flex: 0.6 }} >
+                                <Text style={Style.alinhaLabel}>Valor do KW/R$</Text>
+                                <InputPattern
+                                    keyboardType='numeric'
+                                    editable={false}
+                                    value={this.state.valorKW}
+                                    handleClick={this.setValorKW}
+                                />
+                            </View>
+                        </View>
+
+
                     </View>
                 </ScrollView>
 

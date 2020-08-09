@@ -4,12 +4,13 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity  
+  TouchableOpacity
 } from "react-native";
 
 import Style from "../styles/styles";
 import Dropdow from "../components/dropdown/index";
 import InputPattern from "../components/InputPattern/index";
+import MsgModal from "../components/modal/index"
 
 export default class FormCli extends Component {
 
@@ -26,12 +27,14 @@ export default class FormCli extends Component {
       cidades: [{ "id": "0", "nome": "Selecione uma Cidade", "distancia": '0' },
       { "id": "1", "nome": "Dois Vizinhos", "distancia": "999" },
       { "id": "3", "nome": "Pato Branco", "distancia": "888" }],
-      bntActive: true
+      bntActive: true,
+      open: false,
+      mensagem: ''
     }
   }
 
   setNome = (nome) => {
-    this.setState({ nome });    
+    this.setState({ nome });
   }
 
   setCnpjf = (cnpjf) => {
@@ -54,6 +57,42 @@ export default class FormCli extends Component {
     this.setState({ cidadeSel });
   }
 
+  setMensagem = (msg) => {
+    this.setState({ mensagem: msg });
+  }
+
+  openModal = (open) => {
+    this.setState({ open });
+  }
+
+  _geToMessage(cliente) {
+    if (!cliente.nome) return "Necessário informar o Nome do Cliente";
+    if (!cliente.cnpjf) return "Necessário informar o CPF/CNPJ do Cliente";
+    if (!cliente.contato) return "Necessário informar o Contato do Cliente";
+    if (!cliente.endereco) return "Necessário informar o Endereço do Cliente";
+    if (!cliente.cep) return "Necessário informar o Cep do Cliente";
+    if (cliente.cidadeSel <= 0) return "Necessário selecionar a Cidade do Cliente";
+  }
+
+  onValidaFom = (cliente) => {
+
+    if ((!cliente.nome) ||
+      (!cliente.cnpjf) ||
+      (!cliente.contato) ||
+      (!cliente.endereco) ||
+      (!cliente.cep) ||
+      (cliente.cidadeSel <= 0)) {
+
+      const msg = this._geToMessage(cliente);
+
+      this.setState({ mensagem: msg });
+      this.openModal(true);
+
+    } else {
+      this.props.navigation.navigate('formConfOrcamento');
+    }
+  }
+
   _Submit() {
 
     const cliente = {
@@ -65,8 +104,9 @@ export default class FormCli extends Component {
       cep: this.state.cep,
       cidadeSel: this.state.cidadeSel
     };
-    
-    this.props.navigation.navigate('formConfOrcamento');
+
+    this.onValidaFom(cliente);
+
   }
 
   render() {
@@ -145,6 +185,8 @@ export default class FormCli extends Component {
         >
           <Text style={Style.labelBotao}>Prosseguir</Text>
         </TouchableOpacity>
+
+        <MsgModal mensagem={this.state.mensagem} open={this.state.open} execute={this.openModal} />
 
       </View>
     );
