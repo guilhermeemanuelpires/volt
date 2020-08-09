@@ -12,19 +12,16 @@ import { DrawerActions } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
-const button = () => (
-  <TouchableOpacity>
-    <Image
-      source={require("../../assets/menu.png")}
-      style={{ width: 50, height: 50 }}
-    />
-  </TouchableOpacity>
-);
-
 export default function Routes() {
   return (
     <Stack.Navigator
       initialRouteName="FormCli"
+            screenOptions={{
+        headerStyle: {
+          backgroundColor: "#0A7ABF",
+        },
+        headerTintColor: "#ffff",
+      }}
     >
       <Stack.Screen name="Database" component={Database} />      
       <Stack.Screen
@@ -56,7 +53,8 @@ export default function Routes() {
         name="formConfOrcamento"
         component={formConfOrcamento}
         options={({ navigation }) => ({
-          title: "Volt Orçamento"
+          title: "Volt Orçamento",
+          backgroundColor: "#0A7ABF"
         })}
       />
     </Stack.Navigator>
