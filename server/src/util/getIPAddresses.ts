@@ -15,7 +15,7 @@ export default function () {
     }
 
     if (ipAddresses.length > 0) {
-        return ipAddresses[1]
+        return ipAddresses
     } else {
         return ipAddresses[0];
     }

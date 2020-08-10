@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { CidadesEntity } from "../entity/cidades.entity";
+import { CidadesEntity } from "../entity/cidade.entity";
 
 class CidadesController {
 
@@ -12,7 +12,6 @@ class CidadesController {
             res.status(500).send(error);
         }
     }
-
 }
 
 export default new CidadesController();

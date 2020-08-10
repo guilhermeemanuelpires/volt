@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import CidadesController from '../controller/cidades.controller';
+import padroesEntradaController from '../controller/padroesEntrada.controller';
 
 class Routes {
     public router: Router;
@@ -10,7 +10,7 @@ class Routes {
     }
 
     private init() {
-        this.router.get('/', CidadesController.cidades);
+        this.router.get('/', padroesEntradaController.Padroes);
     }
 
 }

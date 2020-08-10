@@ -71,14 +71,14 @@ const Style = StyleSheet.create({
 });
 
 export default class InitDatabase extends React.Component {
-  state = { modulos: [], loading: true, ip: "" };
+  state = { modulos: [], cidades: [], media: [], loading: true, ip: "" };
   listarALL = async () => {
-    const modulos = await listar.getAll(this.state.ip);
-    if (modulos) {
+    const cidades = await listar.getAll(this.state.ip);
+    if (!cidades) {
       alert("Erro!!");
     } else {
-      this.setState({ modulos });
-      console.log(this.state.modulos);
+      this.setState({ cidades });
+      console.log(this.state.cidades);
     }
     // this.fetchData();
   };
@@ -94,6 +94,16 @@ export default class InitDatabase extends React.Component {
           "modelo TEXT, descricao TEXT, potencia DOUBLE," +
           "area DOUBLE, eficiencia DOUBLE, peso DOUBLE," +
           "garantia1 INT, garantia2 INT)"
+      );
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS cidade " +
+          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+          "nome TEXT, cep TEXT)"
+      );
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS mediaCidade " +
+          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+          "media DOUBLE, codCidade INT)"
       );
     });
     this.fetchData(); //Metodo de select
@@ -112,7 +122,8 @@ export default class InitDatabase extends React.Component {
   };
   derreter() {
     db.transaction((tx) => {
-      tx.executeSql("DROP TABLE modulo ");
+      tx.executeSql("delete from modulo ");
+      tx.executeSql("delete from cidade ");
     });
   }
   // function para criar novo item
@@ -121,6 +132,37 @@ export default class InitDatabase extends React.Component {
       const modulos = await listar.getAll(this.state.ip);
       this.setState({ modulos });
       db.transaction((tx) => {
+        derreter()
+        for (let x = 0; x < this.state.modulos.length; x++) {
+          tx.executeSql(
+            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
+              "values (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+              this.state.modulos[x].modelo,
+              this.state.modulos[x].descricao,
+              this.state.modulos[x].potencia,
+              this.state.modulos[x].area,
+              this.state.modulos[x].eficiencia,
+              this.state.modulos[x].peso,
+              this.state.modulos[x].garantia1,
+              this.state.modulos[x].garantia2,
+            ],
+            (txObj, resultSet) =>
+              this.setState({
+                data: this.state.data.concat({
+                  id: resultSet.insertId,
+                  modelo: this.state.modulos[x].modelo,
+                  potencia: this.state.modulos[x].potencia,
+                  area: this.state.modulos[x].area,
+                  eficiencia: this.state.modulos[x].eficiencia,
+                  peso: this.state.modulos[x].peso,
+                  garantia1: this.state.modulos[x].garantia1,
+                  garantia2: this.state.modulos[x].garantia2,
+                }),
+              }),
+            (txObj, error) => console.log("Error", error)
+          );
+        }
         for (let x = 0; x < this.state.modulos.length; x++) {
           tx.executeSql(
             "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
