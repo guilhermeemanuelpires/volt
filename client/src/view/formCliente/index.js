@@ -128,6 +128,8 @@ export default class FormCli extends Component {
 
             <Text style={Style.alinhaLabel}>CPF/CNPJ</Text>
             <InputPattern
+              mask='CNPJF'
+              maxLength={18}
               value={this.state.cnpjf}
               handleClick={this.setCnpjf}
               keyboardType='number-pad'
@@ -135,6 +137,8 @@ export default class FormCli extends Component {
 
             <Text style={Style.alinhaLabel}>Contato</Text>
             <InputPattern
+              mask='FONE'
+              maxLength={15}
               value={this.state.contato}
               handleClick={this.setContato}
               keyboardType='number-pad'
@@ -148,6 +152,8 @@ export default class FormCli extends Component {
 
             <Text style={Style.alinhaLabel}>Cep</Text>
             <InputPattern
+              mask='CEP'
+              maxLength={10}
               value={this.state.cep}
               handleClick={this.setCep}
               keyboardType='number-pad'
