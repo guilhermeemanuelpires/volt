@@ -1,26 +1,49 @@
-import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import React, { useState } from 'react'
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import { Image, Text, View } from "react-native";
 import Database from "../database/iniitDatabase";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FormCli from "../view/formCliente/index";
+import MsgModal from "../view/form/index"
 
 const Drawer = createDrawerNavigator();
+const Content = (props) => {
+  return (
+    <DrawerContentScrollView {...props}>
+      <View 
+      style={{ alignItems:"center" }}
+      >
+      <Image
+      source={require("../../assets/volt.png")}
+      style={{ width: 250, height: 100}}
+    />
+    </View>
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+    
+  );
+};
 
 export default function MainRoutes() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator drawerContent={Content}>
       <Drawer.Screen
-        name="FormCli"
+        name="Tela Inicial"
         component={FormCli}
         options={{
           drawerIcon: ({ size }) => (
-            <MaterialCommunityIcons name="logout" color="#000" size={size} />
-          )
+            <MaterialCommunityIcons name="home" color="#000" size={size} />
+          ),
         }}
       />
       <Drawer.Screen
-        name="Database"
-        component={Database}
+        name="Atualizar Dados"
+        component={MsgModal}
         options={{
           drawerIcon: ({ size }) => (
             <MaterialCommunityIcons name="refresh" color="#000" size={size} />
