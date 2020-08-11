@@ -16,14 +16,13 @@ export default function Routes() {
   return (
     <Stack.Navigator
       initialRouteName="FormCli"
-            screenOptions={{
+        screenOptions={{
         headerStyle: {
           backgroundColor: "#0A7ABF",
         },
         headerTintColor: "#ffff",
       }}
-    >
-      <Stack.Screen name="Database" component={Database} />      
+    >   
       <Stack.Screen
         name="FormCli"
         component={MainRoutes}
@@ -57,6 +56,7 @@ export default function Routes() {
           backgroundColor: "#0A7ABF"
         })}
       />
+      <Stack.Screen name="Database" component={Database} />   
     </Stack.Navigator>
   );
 }

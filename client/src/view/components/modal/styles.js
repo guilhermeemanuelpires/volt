@@ -6,6 +6,13 @@ export default styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
+    input: {
+        height: 36,
+        width: 250,
+        borderColor: "#EEE8AA",
+        borderWidth: 1,
+        borderRadius: 9,
+      },
     modalView: {
         margin: 20,
         backgroundColor: "white",
