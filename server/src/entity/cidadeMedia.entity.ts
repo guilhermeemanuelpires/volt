@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { type } from "os";
 
-@Entity({ name: 'cidadeMedia' })
+@Entity({ name: 'cidade_media' })
 
 export class cidadeMediaEntity {
     @PrimaryGeneratedColumn()

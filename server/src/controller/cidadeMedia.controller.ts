@@ -6,8 +6,8 @@ class CidadeMediaController {
 
     public async cidadesMedia(req: Request, res: Response) {
         try {
-            const Cidades = await getRepository(cidadeMediaEntity).find();
-            return res.status(200).send({Cidades});
+            const Media = await getRepository(cidadeMediaEntity).find();
+            return res.status(200).send({Media});
         } catch (error) {
             res.status(500).send(error);
         }
