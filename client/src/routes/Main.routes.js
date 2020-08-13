@@ -3,13 +3,12 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
 } from "@react-navigation/drawer";
 import { Image, Text, View } from "react-native";
 import Database from "../database/iniitDatabase";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FormCli from "../view/formCliente/index";
-import MsgModal from "../view/form/index"
+import FormDatabase from "../view/formDatabase/index";
 
 const Drawer = createDrawerNavigator();
 const Content = (props) => {
@@ -43,7 +42,8 @@ export default function MainRoutes() {
       />
       <Drawer.Screen
         name="Atualizar Dados"
-        component={Database}
+        component={FormDatabase}
+
         options={{
           drawerIcon: ({ size }) => (
             <MaterialCommunityIcons name="refresh" color="#000" size={size} />

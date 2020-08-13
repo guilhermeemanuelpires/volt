@@ -1,34 +1,21 @@
 import React, { Component } from "react";
 import {
-  Alert,
-  Modal,
-  Text,
-  TouchableOpacity,
   View,
-  TextInput,
+  Text,
+  Modal,
+  ActivityIndicator
+
 } from "react-native";
 
-import styles from "./styles";
+import styles from "./styles"
 
-export default class MsgModal extends Component {
-  state = { ip: "" };
-  setModalVisible = (open) => {
-    this.props.execute({ open })
-}
-  derreter = () => {
-    // Alert.alert(this.state.ip);
-    console.log("OPEN "+this.props.open);
-    console.log("!OPEN" + !this.props.open);
-    this.props.execute(!this.props.open);
-    // this.setState({ visible: false });
-    this.props.execute(!this.props.visible);
-  };
-
+export default class ModalIP extends Component {
+  
   render() {
-    const { modalVisible } = this.props;
     return (
+
       <Modal
-        animationType="slide"
+        animationType="none"
         transparent={true}
         visible={this.props.open}
         onRequestClose={() => {
@@ -37,26 +24,13 @@ export default class MsgModal extends Component {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TextInput
-              style={styles.input}
-              autoFocus={true}
-              // onFocus={() => this.setState({ ip: "" })}
-              value={this.state.ip}
-              onChangeText={(ip) => this.setState({ ip })}
-              keyboardType="numeric"
-            />
 
-            <TouchableOpacity
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                this.setModalVisible(!this.props.open)
-            }}
-            >
-              <Text style={styles.textStyle}>Voltar</Text>
-            </TouchableOpacity>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.descricao}>{this.props.mensagem}</Text>
           </View>
         </View>
       </Modal>
+
     );
   }
 }

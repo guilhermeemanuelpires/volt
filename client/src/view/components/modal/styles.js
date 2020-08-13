@@ -12,7 +12,7 @@ export default styles = StyleSheet.create({
         borderColor: "#EEE8AA",
         borderWidth: 1,
         borderRadius: 9,
-      },
+    },
     modalView: {
         margin: 20,
         backgroundColor: "white",
@@ -42,5 +42,8 @@ export default styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
+    },
+    descricao: {
+        paddingTop: 15
     }
 });
