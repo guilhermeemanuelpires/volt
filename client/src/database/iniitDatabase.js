@@ -10,9 +10,11 @@ import {
 } from "react-native";
 // import TextInputMask from "react-native-text-input-mask";
 import { DatabaseConnection } from "../database/connection";
+import SearchableDropdown from "react-native-searchable-dropdown";
 import listar from "../service/api";
+import { color } from "react-native-reanimated";
+import Dropdow from "../view/components/dropdown/index";
 var db = null;
-
 const Style = StyleSheet.create({
   container: {
     flex: 1,
@@ -71,21 +73,29 @@ const Style = StyleSheet.create({
 });
 
 export default class InitDatabase extends React.Component {
-  state = { modulos: [], cidades: [], media: [], loading: true, ip: "" };
+  state = {
+    data: [],
+    modulos: [],
+    cidades: [],
+    medias: [],
+    loading: true,
+    ip: "",
+    cidadeSel: 0,
+    cepSel:''
+  };
+
   listarALL = async () => {
-    const cidades = await listar.getAll(this.state.ip);
+    const cidades = await listar.getModulo('192.168.0.236');
     if (!cidades) {
       alert("Erro!!");
     } else {
       this.setState({ cidades });
-      console.log(this.state.cidades);
     }
-    // this.fetchData();
   };
-
   constructor(props) {
-    db = DatabaseConnection.getConnection();
     super(props);
+    db = DatabaseConnection.getConnection();
+    this.fetchData(); //Metodo de select
     // Verifique se a tabela de itens existe, se não a criar
     db.transaction((tx) => {
       tx.executeSql(
@@ -98,27 +108,26 @@ export default class InitDatabase extends React.Component {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS cidade " +
           "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "nome TEXT, cep TEXT)"
-      );
-      tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS mediaCidade " +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "media DOUBLE, codCidade INT)"
+          "nome TEXT, cep TEXT, media DOUBLE)"
       );
     });
-    this.fetchData(); //Metodo de select
   }
-  fetchData = () => {
-    db.transaction((tx) => {
-      // enviando 4 argumentos em executeSql
+  setCidadeSel = (cidadeSel) => {
+    this.setState({ cidadeSel });
+  }
+  fetchData = async () => {
+    await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT * FROM modulo",
-        null, // passando consulta sql e parâmetros: null
-        // retorno de chamada de sucesso que envia duas coisas: objeto de transação e objeto de resultado
-        (txObj, { rows: { _array } }) => this.setState({ data: _array })
-        // retorno de chamada de falha que envia duas coisas, objeto de transação e erro
-      ); // fim execucao SQL
-    }); // fim da transacao
+        "SELECT id, nome as name, media, cep FROM cidade",
+        [],
+        (trans, result) => {
+          // console.log(result['rows']._array),
+          this.setState({ data: result["rows"]._array });
+          // console.log("Data " +this.state.data)
+        }
+      );
+    });
+    // console.log(this.state.data)
   };
   derreter() {
     db.transaction((tx) => {
@@ -129,65 +138,29 @@ export default class InitDatabase extends React.Component {
   // function para criar novo item
   newItem = async () => {
     if (this.state.ip != "") {
-      const modulos = await listar.getAll(this.state.ip);
-      this.setState({ modulos });
+      const modulos = await listar.getModulo(this.state.ip);
+      const cidades = await listar.getCidade(this.state.ip);
+      const medias = await listar.getMedia(this.state.ip);
+      this.setState({ modulos, cidades, medias });
+      console.log(this.state.medias.length);
+      console.log(this.state.cidades.length);
       db.transaction((tx) => {
-        derreter()
-        for (let x = 0; x < this.state.modulos.length; x++) {
+        tx.executeSql("DELETE FROM cidade");
+        for (let x = 0; x < this.state.cidades.length; x++) {
           tx.executeSql(
-            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
-              "values (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO cidade (nome, cep, media)" + "values (?, ?, ?)",
             [
-              this.state.modulos[x].modelo,
-              this.state.modulos[x].descricao,
-              this.state.modulos[x].potencia,
-              this.state.modulos[x].area,
-              this.state.modulos[x].eficiencia,
-              this.state.modulos[x].peso,
-              this.state.modulos[x].garantia1,
-              this.state.modulos[x].garantia2,
+              this.state.cidades[x].nome,
+              this.state.cidades[x].cep,
+              this.state.medias[x].media,
             ],
             (txObj, resultSet) =>
               this.setState({
                 data: this.state.data.concat({
                   id: resultSet.insertId,
-                  modelo: this.state.modulos[x].modelo,
-                  potencia: this.state.modulos[x].potencia,
-                  area: this.state.modulos[x].area,
-                  eficiencia: this.state.modulos[x].eficiencia,
-                  peso: this.state.modulos[x].peso,
-                  garantia1: this.state.modulos[x].garantia1,
-                  garantia2: this.state.modulos[x].garantia2,
-                }),
-              }),
-            (txObj, error) => console.log("Error", error)
-          );
-        }
-        for (let x = 0; x < this.state.modulos.length; x++) {
-          tx.executeSql(
-            "INSERT INTO modulo (modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
-              "values (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-              this.state.modulos[x].modelo,
-              this.state.modulos[x].descricao,
-              this.state.modulos[x].potencia,
-              this.state.modulos[x].area,
-              this.state.modulos[x].eficiencia,
-              this.state.modulos[x].peso,
-              this.state.modulos[x].garantia1,
-              this.state.modulos[x].garantia2,
-            ],
-            (txObj, resultSet) =>
-              this.setState({
-                data: this.state.data.concat({
-                  id: resultSet.insertId,
-                  modelo: this.state.modulos[x].modelo,
-                  potencia: this.state.modulos[x].potencia,
-                  area: this.state.modulos[x].area,
-                  eficiencia: this.state.modulos[x].eficiencia,
-                  peso: this.state.modulos[x].peso,
-                  garantia1: this.state.modulos[x].garantia1,
-                  garantia2: this.state.modulos[x].garantia2,
+                  nome: this.state.cidades[x].nome,
+                  cep: this.state.cidades[x].cep,
+                  media: this.state.medias[x].media,
                 }),
               }),
             (txObj, error) => console.log("Error", error)
@@ -197,13 +170,14 @@ export default class InitDatabase extends React.Component {
     } else {
       alert("Preenche o campo iP");
     }
+    // this.fetchData();
   };
 
   //Function delete
   delete = (id) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "DELETE FROM modulo WHERE id = ? ",
+        "DELETE FROM cidade WHERE id = ? ",
         [id],
         (txObj, resultSet) => {
           if (resultSet.rowsAffected > 0) {
@@ -221,51 +195,98 @@ export default class InitDatabase extends React.Component {
     return (
       <View style={Style.container}>
         <Text style={Style.titulo}>Teste SQLITE</Text>
-        <View>
+        {/* <View>
           <Text style={Style.titulo}> Insira o IP</Text>
-          {/* <TextInputMask
-            refInput={(ref) => {
-              this.input = ref;
-            }}
-            
-            value={this.state.ip}
-            keyboardType="numeric"
-            onChangeText={
-              (ip) => this.setState({ ip })
-              (formatted, extracted) => {
-              console.log(formatted); // +1 (123) 456-78-90
-              console.log(extracted); // 1234567890
-            }}
-            mask={"+1 ([000]) [000] [00] [00]"}
-          /> */}
           <TextInput
             style={Style.input}
             autoFocus={true}
             // onFocus={() => this.setState({ ip: "" })}
-            value={this.state.ip}
+            // value={this.state.ip}
             onChangeText={(ip) => this.setState({ ip })}
             keyboardType="numeric"
           />
-        </View>
+        </View>*/
         <TouchableOpacity onPress={this.newItem} style={Style.buttonAdd}>
           <Text style={Style.txtbutton}>Adicionar</Text>
-        </TouchableOpacity>
-        <ScrollView>
-          {this.state.data &&
-            this.state.data.map((data) => (
-              <View key={data.id} style={Style.item}>
-                <Text>
-                  {data.id} {data.descricao} - {data.area}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => this.delete(data.id)}
-                  style={Style.buttonExc}
-                >
-                  <Text> DEL </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-        </ScrollView>
+        </TouchableOpacity>}
+        <View style={{ flex: 1, marginTop: 30 }}>
+        {/* <Dropdow
+                  descricao="name"
+                  lista={this.state.data}
+                  sel={this.state.cidadeSel}
+                  handleClick={this.setCidadeSel} /> */}
+          {/* {console.log(this.state.data)} */}
+          <SearchableDropdown
+            onTextChange={(text) => console.log(text)}
+            //On text change listner on the searchable input
+            onItemSelect={(item) => this.setState({cidadeSel: String(item.media), cepCel : item.cep})}
+            //onItemSelect called after the selection from the dropdown
+            containerStyle={{ padding: 5 }}
+            //suggestion container style
+            textInputStyle={{
+              //inserted text style
+              padding: 12,
+              borderWidth: 1,
+              borderColor: "#ccc",
+              backgroundColor: "#FAF7F6",
+            }}
+            itemStyle={{
+              //single dropdown item style
+              padding: 10,
+              marginTop: 2,
+              backgroundColor: "#FAF9F8",
+              borderColor: "#bbb",
+              borderWidth: 1,
+            }}
+            itemTextStyle={{
+              //text style of a single dropdown item
+              color: "#222",
+            }}
+            itemsContainerStyle={{
+              //items container style you can pass maxHeight
+              //to restrict the items dropdown hieght
+              maxHeight: "60%",
+            }}
+            items={this.state.data}
+            //mapping of item array
+            defaultIndex={2}
+            //default selected item index
+            placeholder="placeholder"
+            //place holder for the search input
+            resetValue={false}
+            //reset textInput Value with true and false state
+            underlineColorAndroid="transparent"
+            //To remove the underline from the android input
+          />
+          <TextInput
+          value={this.state.cepCel}
+          placeholder="Cep"
+          ></TextInput>
+          <TextInput
+          placeholder="Media"
+          value={this.state.cidadeSel}
+          onChangeText={(media) => this.setState({ media:media })}
+          >
+            
+          </TextInput>
+          {/* <ScrollView>
+            {
+            this.state.data &&
+              this.state.data.map((data) => (
+                <View key={data.id} style={Style.item}>
+                  <Text>
+                    {data.id} {data.nome} - {data.cep}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => this.delete(data.id)}
+                    style={Style.buttonExc}
+                  >
+                    <Text> DEL </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+          </ScrollView> */}
+        </View>
       </View>
     );
   }

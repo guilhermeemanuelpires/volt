@@ -1,0 +1,23 @@
+DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_INSERT`;
+
+DELIMITER $$
+USE `volt`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_INSERT` AFTER INSERT ON `cidade` FOR EACH ROW
+BEGIN
+insert into cidade_media (media, codcidade) 
+values
+((select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
+from cidade where id = new.id ), new.id );
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_UPDATE`;
+DELIMITER $$
+USE `volt`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_UPDATE` AFTER UPDATE ON `cidade` FOR EACH ROW
+BEGIN
+update cidade_media set media = (select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
+from cidade where id = new.id ) where codcidade = new.id;
+END$$
+DELIMITER ;
+

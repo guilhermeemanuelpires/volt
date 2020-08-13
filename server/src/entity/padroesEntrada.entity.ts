@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { type } from "os";
 
-@Entity({ name: 'padroesEntrada' })
+@Entity({ name: 'padroes_entrada' })
 
 export class PadroesEntradaEntity {
     @PrimaryGeneratedColumn()

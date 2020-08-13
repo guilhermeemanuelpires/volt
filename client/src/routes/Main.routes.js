@@ -43,7 +43,7 @@ export default function MainRoutes() {
       />
       <Drawer.Screen
         name="Atualizar Dados"
-        component={MsgModal}
+        component={Database}
         options={{
           drawerIcon: ({ size }) => (
             <MaterialCommunityIcons name="refresh" color="#000" size={size} />
