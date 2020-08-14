@@ -5,10 +5,10 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { Image, Text, View } from "react-native";
-import Database from "../database/iniitDatabase";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FormCli from "../view/formCliente/index";
 import FormDatabase from "../view/formDatabase/index";
+import { DatabaseConnection } from '../database/connection';
 
 const Drawer = createDrawerNavigator();
 const Content = (props) => {
