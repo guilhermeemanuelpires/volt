@@ -50,7 +50,8 @@ export default class formConfOrcamento extends Component {
       mediaConsumoMes: "",
       taxaPerda: "",
 
-      moduloSel: "",
+      moduloSel: 0,
+      // modulos: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }],
       modulos: [],
 
       numeroModulos: "",
@@ -116,7 +117,7 @@ export default class formConfOrcamento extends Component {
   listModulos = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT id, potencia ,descricao FROM modulo",
+        "SELECT id, potencia, descricao FROM modulo",
         [],
         (trans, result) => {
           this.setState({ modulos: result["rows"]._array });
@@ -135,6 +136,7 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tipo De Rede</Text>
             <Dropdow
               descricao="descricao"
+              value="a"
               lista={this.state.tipoRedes}
               sel={this.state.tipoRedeSel}
               handleClick={this.setTipoRedeSel}
@@ -143,6 +145,7 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tarifa</Text>
             <Dropdow
               descricao="descricao"
+              value="a"
               lista={this.state.tarifas}
               sel={this.state.tarifaSel}
               handleClick={this.setTarifaSel}
@@ -151,6 +154,7 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Disjuntor</Text>
             <Dropdow
               descricao="descricao"
+              value="a"
               lista={this.state.disjuntores}
               sel={this.state.disjuntorSel}
               handleClick={this.setDisjuntorSel}
@@ -159,6 +163,7 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tipo instalação</Text>
             <Dropdow
               descricao="descricao"
+              value="a"
               lista={this.state.tipoInstalacao}
               sel={this.state.instalacaoSel}
               handleClick={this.setInstalacaoSel}
@@ -188,6 +193,7 @@ export default class formConfOrcamento extends Component {
               <View style={{ flex: 0.8 }}>
                 <Dropdow
                   descricao="descricao"
+                  value="potencia"
                   lista={this.state.modulos}
                   sel={this.state.moduloSel}
                   handleClick={this.setModuloSel}

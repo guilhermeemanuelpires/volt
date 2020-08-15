@@ -65,7 +65,7 @@ export default class FormDatabase extends Component {
             this.state.modulos[x].eficiencia,
             this.state.modulos[x].peso,
             this.state.modulos[x].garantia1,
-            this.state.modulos[x].garantia2
+            this.state.modulos[x].garantia2,
           ],
           (txObj, resultSet) =>
             this.setState({
@@ -78,7 +78,7 @@ export default class FormDatabase extends Component {
                 eficiencia: this.state.modulos[x].eficiencia,
                 peso: this.state.modulos[x].peso,
                 garantia1: this.state.modulos[x].garantia1,
-                garantia2: this.state.modulos[x].garantia2
+                garantia2: this.state.modulos[x].garantia2,
               }),
             }),
           (txObj, error) => console.log("Error", error)
@@ -128,16 +128,12 @@ export default class FormDatabase extends Component {
 
       // essa gambira só serve para teste
       setTimeout(() => {
-        this.setState({ openIP: false });
         this.newModulos(data.ip);
-        this.setState({ openIP: true });
-       this.setState({ mensagemIP: "Atualizando Tabela Modulos" });  
-       setTimeout(() => {
-        this.setState({ openIP: false });
-      }, 1000);
+        this.setState({ mensagemIP: "Atualizando Tabela Modulos" });
+        setTimeout(() => {
+          this.setState({ openIP: false });
+        }, 1000);
       }, 20000);
-
-
     }
   };
 

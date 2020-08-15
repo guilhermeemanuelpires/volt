@@ -5,7 +5,6 @@ import {
 import { Button, Image, TouchableOpacity } from "react-native";
 import FormCli from "../view/formCliente/index";
 import formConfOrcamento from "../view/formConfOrcamento/index";
-import Database from "../database/iniitDatabase";
 import MainRoutes from "./Main.routes";
 import React from "react";
 import { DrawerActions } from "@react-navigation/native";
@@ -55,8 +54,7 @@ export default function Routes() {
           title: "Volt Orçamento",
           backgroundColor: "#0A7ABF"
         })}
-      />
-      <Stack.Screen name="Database" component={Database} />   
+      />      
     </Stack.Navigator>
   );
 }
