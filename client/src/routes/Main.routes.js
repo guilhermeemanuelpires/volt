@@ -7,7 +7,7 @@ import {
 import { Image, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FormCli from "../view/formCliente/index";
-import FormDatabase from "../view/formDatabase/index";
+import Database from "../database/innitconnection"
 import { DatabaseConnection } from '../database/connection';
 
 const Drawer = createDrawerNavigator();

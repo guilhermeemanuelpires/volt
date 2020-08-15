@@ -13,6 +13,7 @@ async function getModulo(ip) {
 async function getCidade(ip) {
   try {
     const api = "http://" + ip + ":3000/cidade";
+    console.log(api)
     const response = await fetch(api);
     const responseJson = await response.json();
     return responseJson["Cidades"];

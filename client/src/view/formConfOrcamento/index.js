@@ -12,9 +12,9 @@ import { DatabaseConnection } from "../../database/connection";
 import Style from "../styles/styles";
 var db = null;
 export default class formConfOrcamento extends Component {
-//   componentDidUpdate() {
-//     this.listModulos();
-//   }
+  //   componentDidUpdate() {
+  //     this.listModulos();
+  //   }
   constructor(props) {
     db = DatabaseConnection.getConnection();
     super(props);
@@ -50,10 +50,9 @@ export default class formConfOrcamento extends Component {
       mediaConsumoMes: "",
       taxaPerda: "",
 
-      moduloSel: 0,
-      // modulos: [{ "id": "0", "descricao": "Selecione" }, { "id": "1", "descricao": "aaaaaa" }, { "id": "2", "descricao": "bbbbb" }],
+      moduloSel: "",
       modulos: [],
-
+      potencia: 0,
       numeroModulos: "",
       calculoPotenciaSistema: "",
       calculoPotenciaInstalada: "",
@@ -89,6 +88,14 @@ export default class formConfOrcamento extends Component {
 
   setModuloSel = (moduloSel) => {
     this.setState({ moduloSel });
+    // console.log(moduloSel)
+
+    const potenciaModulo = this.state.modulos.find((modulo) => {
+      if (modulo.id == moduloSel) {
+        return modulo;
+      }
+    });
+    this.setState({ potencia: potenciaModulo.potencia });
   };
 
   setNumeroModulos = (numeroModulos) => {
@@ -117,11 +124,10 @@ export default class formConfOrcamento extends Component {
   listModulos = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT id, potencia, descricao FROM modulo",
+        "SELECT id, descricao, potencia FROM modulo",
         [],
         (trans, result) => {
           this.setState({ modulos: result["rows"]._array });
-          console.log(result["rows"]._array)
         }
       );
     });
@@ -136,7 +142,6 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tipo De Rede</Text>
             <Dropdow
               descricao="descricao"
-              value="a"
               lista={this.state.tipoRedes}
               sel={this.state.tipoRedeSel}
               handleClick={this.setTipoRedeSel}
@@ -145,7 +150,6 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tarifa</Text>
             <Dropdow
               descricao="descricao"
-              value="a"
               lista={this.state.tarifas}
               sel={this.state.tarifaSel}
               handleClick={this.setTarifaSel}
@@ -154,7 +158,6 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Disjuntor</Text>
             <Dropdow
               descricao="descricao"
-              value="a"
               lista={this.state.disjuntores}
               sel={this.state.disjuntorSel}
               handleClick={this.setDisjuntorSel}
@@ -163,7 +166,6 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Tipo instalação</Text>
             <Dropdow
               descricao="descricao"
-              value="a"
               lista={this.state.tipoInstalacao}
               sel={this.state.instalacaoSel}
               handleClick={this.setInstalacaoSel}
@@ -193,7 +195,6 @@ export default class formConfOrcamento extends Component {
               <View style={{ flex: 0.8 }}>
                 <Dropdow
                   descricao="descricao"
-                  value="potencia"
                   lista={this.state.modulos}
                   sel={this.state.moduloSel}
                   handleClick={this.setModuloSel}
@@ -204,7 +205,7 @@ export default class formConfOrcamento extends Component {
                   keyboardType="numeric"
                   editable={false}
                   style={Style.inputRight}
-                  value={this.state.moduloSel}
+                  value={String(this.state.potencia)}
                 />
               </View>
             </View>
