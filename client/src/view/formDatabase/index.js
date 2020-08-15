@@ -9,8 +9,9 @@ import Style from "../styles/styles";
 import StyleIp from "./styles";
 
 var db = null;
-export default class FormDatabase extends Component {
+export default class FormDatabase extends React.Component {
   constructor(props) {
+    super(props);
     db = DatabaseConnection.getConnection();
     db.transaction((tx) => {
       tx.executeSql(
@@ -26,7 +27,6 @@ export default class FormDatabase extends Component {
           "nome TEXT, cep TEXT, media DOUBLE)"
       );
     });
-    super(props);
     this.state = {
       ip: "",
       data: [],
@@ -86,13 +86,14 @@ export default class FormDatabase extends Component {
       }
     });
   };
-  newCidades = async (data) => {
-    const cidades = await listar.getCidade(data);
-    const medias = await listar.getMedia(data);
-    this.setState({ cidades, medias });
+  newCidades = async () => {
+    const cidades = await listar.getCidade(this.state.ip);
+    const medias = await listar.getMedia(this.state.ip);
+    this.setState({cidades, medias });
+    console.log(this.state.medias.length);
+    console.log(this.state.cidades.length);
     db.transaction((tx) => {
       tx.executeSql("DELETE FROM cidade");
-      tx.executeSql("DELETE FROM media");
       for (let x = 0; x < this.state.cidades.length; x++) {
         tx.executeSql(
           "INSERT INTO cidade (nome, cep, media)" + "values (?, ?, ?)",
@@ -114,13 +115,27 @@ export default class FormDatabase extends Component {
         );
       }
     });
+    this.listCidades()
+};
+
+  listCidades = async () => {
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT id, nome as name, media, cep FROM cidade",
+        [],
+        (trans, result) => {
+          this.setState({ cidades: result["rows"]._array });
+          // console.log("Select1 "+result["rows"]._array)
+        }
+      );
+    });
   };
   onValidaFom = async (data) => {
     if (!data.ip) {
       this.setState({ mensagem: "Informe um Ip" });
       this.openModal(true);
     } else {
-      this.newCidades(data.ip);
+      this.newCidades();
       // AQUI TU IMPLEMENTA SUA REGRA DE NEGOCIO
       // DE PREFERENCIA CRIE UMA FUNCA SEPARADA
       this.setState({ openIP: true });
@@ -141,7 +156,6 @@ export default class FormDatabase extends Component {
     const data = {
       ip: this.state.ip,
     };
-
     this.onValidaFom(data);
   }
 

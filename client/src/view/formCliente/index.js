@@ -15,9 +15,7 @@ import Style from "../styles/styles";
 
 var db = null;
 export default class FormCli extends Component {
-  componentDidUpdate(){
-    this.listCidades()
-  }
+
   constructor(props) {
     super(props);
     db = DatabaseConnection.getConnection();
@@ -32,9 +30,11 @@ export default class FormCli extends Component {
       cidades: [],
       bntActive: true,
       open: false,
-      mensagem: "",
+      mensagem: ""
     };
-    this.listCidades();
+  } 
+  componentDidMount(){
+    this.listCidades()
   }
 
   setNome = (nome) => {
@@ -122,7 +122,6 @@ export default class FormCli extends Component {
       );
     });
   };
-
   render() {
     return (
       <View style={Style.container}>

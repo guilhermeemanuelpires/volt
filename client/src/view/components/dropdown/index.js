@@ -23,7 +23,7 @@ export default class Dropdown extends Component {
                     selectedValue={this.props.sel}
                     onValueChange={(itemValor, itemindex) => this._pickerChange(itemindex)}>{
                         this.props.lista.map((v) => {
-                            return <Picker.Item label={v[this.props.descricao]} value={v[this.props.value]} key={v.id} />
+                            return <Picker.Item label={v[this.props.descricao]} value={v.id} key={v.id} />
                         })
                     }
                 </Picker>
