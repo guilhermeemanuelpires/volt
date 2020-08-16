@@ -6,8 +6,8 @@ class TarifasController {
 
     public async Tipo(req: Request, res: Response) {
         try {
-            const Tipo = await getRepository(TipoInstalacaoEntity).find();
-            return res.status(200).send({Tipo});
+            const Tipos = await getRepository(TipoInstalacaoEntity).find();
+            return res.status(200).send({Tipos});
         } catch (error) {
             res.status(500).send(error);
         }
