@@ -1,5 +1,5 @@
 docs/*
 client/node_modules
 server/node_modules
+server/ormconfig.json
 debug.log
-

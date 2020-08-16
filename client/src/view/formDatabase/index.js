@@ -432,8 +432,8 @@ export default class FormDatabase extends React.Component {
           mensagem={this.state.mensagem}
           open={this.state.open}
           execute={this.openModal}
-        />
-        <ModalIP open={this.state.openIP} mensagem={this.state.mensagemIP} />
+        />        
+        <ModalIP open={this.state.openIP} mensagem={this.state.mensagemIP} tipoIcone='loading' />
       </View>
     );
   }
