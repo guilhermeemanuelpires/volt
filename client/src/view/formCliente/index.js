@@ -12,6 +12,7 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import MsgModal from "../components/modal/index";
 import { DatabaseConnection } from "../../database/connection";
 import Style from "../styles/styles";
+import StyleForm from "./styles";
 
 var db = null;
 export default class FormCli extends Component {
@@ -169,8 +170,8 @@ export default class FormCli extends Component {
             }}
           >
             <View style={{ flex: 0.8 }}>
-              <SearchableDropdown
-                onTextChange={(text) => console.log(text)}
+              <SearchableDropdown                
+                onTextChange={(text) => {}}
                 onItemSelect={(item) =>
                   this.setState({
                     cidadeSel: String(item.media),
@@ -178,14 +179,9 @@ export default class FormCli extends Component {
                   })
                 }
                 containerStyle={{ padding: 5 }}
-                textInputStyle={{
-                  padding: 5,
-                  borderWidth: 1,
-                  borderColor: "#ccc"
-                }}
+                textInputStyle={Style.inputPiker}
                 itemStyle={{
-                  padding: 5,
-                  // backgroundColor: "#FAF9F8",
+                  padding: 5,                  
                   borderColor: "#bbb",
                   borderWidth: 1,
                 }}
@@ -197,7 +193,7 @@ export default class FormCli extends Component {
                 }}
                 items={this.state.cidades}
                 defaultIndex={2}
-                placeholder="placeholder"
+                placeholder="pesquisar"
                 resetValue={false}
                 underlineColorAndroid="transparent"
               />
@@ -206,7 +202,7 @@ export default class FormCli extends Component {
               <TextInput
                 keyboardType="numeric"
                 editable={false}
-                style={Style.inputRight}
+                style={StyleForm.inputRight}
                 value={this.state.cidadeSel}
               />
             </View>

@@ -3,14 +3,22 @@ import {
   View,
   Text,
   Modal,
-  ActivityIndicator
-
+  ActivityIndicator,
+  Image
 } from "react-native";
 
 import styles from "./styles"
 
 export default class ModalIP extends Component {
-  
+
+  getIcone() {
+    switch (this.props.tipoIcone) {
+      case 'loading': return <ActivityIndicator size="large" color="#0000ff" />
+      case 'sucess': return <Image source={require("../../../../assets/sucess.png")} />
+      case 'error': return <Image source={require("../../../../assets/error.png")} />
+    }
+  }
+
   render() {
     return (
 
@@ -24,8 +32,9 @@ export default class ModalIP extends Component {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            
+            {this.getIcone()}           
 
-            <ActivityIndicator size="large" color="#0000ff" />
             <Text style={styles.descricao}>{this.props.mensagem}</Text>
           </View>
         </View>
