@@ -9,7 +9,7 @@ export class DisjuntorEntity {
     id: number;
 
     @Column({ nullable: false })
-    decricao: string;
+    descricao: string;
 
     @Column({ nullable: false })
     demanda: string;

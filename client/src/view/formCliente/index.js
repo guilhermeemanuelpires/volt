@@ -36,7 +36,9 @@ export default class FormCli extends Component {
   componentDidMount(){
     this.listCidades()
   }
-
+  componentDidUpdate(){
+    this.listCidades()
+  }
   setNome = (nome) => {
     this.setState({ nome });
   };

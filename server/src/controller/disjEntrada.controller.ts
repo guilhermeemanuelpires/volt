@@ -5,8 +5,8 @@ class DisjutorController {
 
     public async DisjutorController(req: Request, res: Response) {
         try {
-            const Disjutor = await getRepository(DisjuntorEntity).find();
-            return res.status(200).send({Disjutor});
+            const Disjutores = await getRepository(DisjuntorEntity).find();
+            return res.status(200).send({Disjutores});
         } catch (error) {
             res.status(500).send(error);
         }

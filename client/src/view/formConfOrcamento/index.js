@@ -12,40 +12,21 @@ import { DatabaseConnection } from "../../database/connection";
 import Style from "../styles/styles";
 var db = null;
 export default class formConfOrcamento extends Component {
-  //   componentDidUpdate() {
-  //     this.listModulos();
-  //   }
   constructor(props) {
     db = DatabaseConnection.getConnection();
     super(props);
     this.state = {
       tipoRedeSel: "",
-      tipoRedes: [
-        { id: "0", descricao: "Selecione" },
-        { id: "1", descricao: "teste" },
-        { id: "2", descricao: "teste02" },
-      ],
+      tipoRedes: [],
 
       tarifaSel: "",
-      tarifas: [
-        { id: "0", descricao: "Selecione" },
-        { id: "1", descricao: "teste" },
-        { id: "2", descricao: "teste02" },
-      ],
+      tarifas: [],
 
       disjuntorSel: "",
-      disjuntores: [
-        { id: "0", descricao: "Selecione" },
-        { id: "1", descricao: "aaaaaa" },
-        { id: "2", descricao: "bbbbb" },
-      ],
+      disjuntores: [],
 
       instalacaoSel: "",
-      tipoInstalacao: [
-        { id: "0", descricao: "Selecione" },
-        { id: "1", descricao: "aaaaaa" },
-        { id: "2", descricao: "bbbbb" },
-      ],
+      tipoInstalacao: [],
 
       mediaConsumoMes: "",
       taxaPerda: "",
@@ -59,6 +40,10 @@ export default class formConfOrcamento extends Component {
       valorFinal: "",
       valorKW: "",
     };
+    this.listTipo_Rede();
+    this.listTarifas();
+    this.listDisjuntores();
+    this.listTipoInstall();
     this.listModulos();
   }
 
@@ -124,10 +109,50 @@ export default class formConfOrcamento extends Component {
   listModulos = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT id, descricao, potencia FROM modulo",
+        "SELECT id, modelo, potencia FROM modulo",
         [],
         (trans, result) => {
           this.setState({ modulos: result["rows"]._array });
+        }
+      );
+    });
+  };
+  listTarifas = async () => {
+    await db.transaction((tx) => {
+      tx.executeSql("SELECT id, valor FROM tarifa", [], (trans, result) => {
+        this.setState({ tarifas: result["rows"]._array });
+      });
+    });
+  };
+  listTipo_Rede = async () => {
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT id, descricao, minimo, coluna1, solo FROM padroes_entrada",
+        [],
+        (trans, result) => {
+          this.setState({ tipoRedes: result["rows"]._array });
+        }
+      );
+    });
+  };
+  listDisjuntores = async () => {
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT id, descricao, demanda, amper, codPadrao FROM disj_entrada",
+        [],
+        (trans, result) => {
+          this.setState({ disjuntores: result["rows"]._array });
+        }
+      );
+    });
+  };
+  listTipoInstall = async () => {
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT id, descricao FROM tipo_instalacao",
+        [],
+        (trans, result) => {
+          this.setState({ tipoInstalacao: result["rows"]._array });
         }
       );
     });
@@ -149,7 +174,7 @@ export default class formConfOrcamento extends Component {
 
             <Text style={Style.alinhaLabel}>Tarifa</Text>
             <Dropdow
-              descricao="descricao"
+              descricao="valor"
               lista={this.state.tarifas}
               sel={this.state.tarifaSel}
               handleClick={this.setTarifaSel}
@@ -194,7 +219,7 @@ export default class formConfOrcamento extends Component {
             >
               <View style={{ flex: 0.8 }}>
                 <Dropdow
-                  descricao="descricao"
+                  descricao="modelo"
                   lista={this.state.modulos}
                   sel={this.state.moduloSel}
                   handleClick={this.setModuloSel}
