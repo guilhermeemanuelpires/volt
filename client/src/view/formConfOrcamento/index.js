@@ -9,6 +9,7 @@ import {
 import Dropdow from "../components/dropdown/index";
 import InputPattern from "../components/InputPattern/index";
 import { DatabaseConnection } from "../../database/connection";
+import Calculos from "../../util/index";
 import Style from "../styles/styles";
 var db = null;
 export default class formConfOrcamento extends Component {
@@ -34,9 +35,9 @@ export default class formConfOrcamento extends Component {
       moduloSel: "",
       modulos: [],
       potencia: 0,
-      numeroModulos: "",
-      calculoPotenciaSistema: "",
-      calculoPotenciaInstalada: "",
+      numeroModulos: 0,
+      calculoPotenciaSistema: 0,
+      calculoPotenciaInstalada: 0,
       valorFinal: "",
       valorKW: "",
     };
@@ -45,6 +46,9 @@ export default class formConfOrcamento extends Component {
     this.listDisjuntores();
     this.listTipoInstall();
     this.listModulos();
+    this.num_modulo();
+    this.potencia_sistema();
+    this.potencia_instalada();
   }
 
   setTaxaPerda = (taxaPerda) => {
@@ -73,13 +77,13 @@ export default class formConfOrcamento extends Component {
 
   setModuloSel = (moduloSel) => {
     this.setState({ moduloSel });
-    // console.log(moduloSel)
-
     const potenciaModulo = this.state.modulos.find((modulo) => {
       if (modulo.id == moduloSel) {
         return modulo;
       }
     });
+
+    console.log(potenciaModulo)
     this.setState({ potencia: potenciaModulo.potencia });
   };
 
@@ -157,6 +161,27 @@ export default class formConfOrcamento extends Component {
       );
     });
   };
+
+  num_modulo = async () => {
+
+    const valor = await Calculos.num_modulos(33.32444681, 0.360)  
+    this.setState({numeroModulos: valor})
+
+  };
+
+  potencia_sistema = async () => {
+
+    const valor = await Calculos.potencia_sistema(4000, 5 , 0.8)
+    this.setState({calculoPotenciaSistema: valor})
+
+  };
+
+  potencia_instalada = async () => {
+    console.log(this.state.numeroModulos)
+    const valor = await Calculos.potencia_instalada(this.state.numeroModulos, 0.360)
+    this.setState({calculoPotenciaInstalada: valor})
+  };
+
   render() {
     return (
       <View style={Style.container}>
@@ -236,11 +261,10 @@ export default class formConfOrcamento extends Component {
             </View>
 
             <Text style={Style.alinhaLabel}>Número de Modulos</Text>
-            <InputPattern
-              keyboardType="numeric"
+            <TextInput
+              style={Style.input}              
               editable={false}
-              value={this.state.numeroModulos}
-              handleClick={this.setNumeroModulos}
+              value={String(this.state.numeroModulos)}      
             />
 
             <Text style={Style.alinhaLabel}>
@@ -249,7 +273,7 @@ export default class formConfOrcamento extends Component {
             <InputPattern
               keyboardType="numeric"
               editable={false}
-              value={this.state.calculoPotenciaSistema}
+              value={String(this.state.calculoPotenciaSistema)}
               handleClick={this.setCalculoPotenciaSistema}
             />
 
@@ -257,7 +281,7 @@ export default class formConfOrcamento extends Component {
             <InputPattern
               keyboardType="numeric"
               editable={false}
-              value={this.state.calculoPotenciaInstalada}
+              value={String(this.state.calculoPotenciaInstalada)}
               handleClick={this.setCalculoPotenciaInstalada}
             />
 

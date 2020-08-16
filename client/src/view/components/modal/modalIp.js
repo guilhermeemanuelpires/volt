@@ -24,7 +24,6 @@ export default class ModalIP extends Component {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-
             <ActivityIndicator size="large" color="#0000ff" />
             <Text style={styles.descricao}>{this.props.mensagem}</Text>
           </View>

@@ -170,7 +170,7 @@ export default class FormCli extends Component {
           >
             <View style={{ flex: 0.8 }}>
               <SearchableDropdown
-                onTextChange={(text) => console.log(text)}
+                // onTextChange={(text) => console.log(text)}
                 onItemSelect={(item) =>
                   this.setState({
                     cidadeSel: String(item.media),
