@@ -29,7 +29,7 @@ export default class FormDatabase extends React.Component {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS tarifa" +
           "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "valor DOUBLE)"
+          "valor DOUBLE, descricao TEXT)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS padroes_entrada" +
@@ -179,6 +179,18 @@ export default class FormDatabase extends React.Component {
       this.setState({ tarifas });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tarifa");
+        tx.executeSql(
+          "INSERT INTO tarifa (descricao)" + "values (?)",
+          ["Selecione"],
+          (txObj, resultSet) =>
+            this.setState({
+              data: this.state.data.concat({
+                id: resultSet.insertId,
+                descricao: "Selecione",
+              }),
+            }),
+          (txObj, error) => console.log("Error", error)
+        );
         for (let x = 0; x < this.state.tarifas.length; x++) {
           tx.executeSql(
             "INSERT INTO tarifa (valor)" + "values (?)",

@@ -32,10 +32,8 @@ export default class ModalIP extends Component {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            
-            {this.getIcone()}           
-
-            <Text style={styles.descricao}>{this.props.mensagem}</Text>
+            {this.getIcone()}          
+           <Text style={styles.descricao}>{this.props.mensagem}</Text>
           </View>
         </View>
       </Modal>
