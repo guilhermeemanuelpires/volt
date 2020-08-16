@@ -1,3 +1,26 @@
+﻿/*Criar triggers*/
+DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_INSERT`;
+
+DELIMITER $$
+USE `volt`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_INSERT` AFTER INSERT ON `cidade` FOR EACH ROW
+BEGIN
+insert into cidade_media (media, codcidade) 
+values
+((select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
+from cidade where id = new.id ), new.id );
+END$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_UPDATE`;
+DELIMITER $$
+USE `volt`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_UPDATE` AFTER UPDATE ON `cidade` FOR EACH ROW
+BEGIN
+update cidade_media set media = (select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
+from cidade where id = new.id ) where codcidade = new.id;
+END$$
+DELIMITER ;
+
 /*Insert Tarifas*/
 INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('1', '0.33');
 INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('2', '0.34');
@@ -27,28 +50,6 @@ INSERT INTO volt.modulo
 (id, modelo, descricao, garantia2, potencia, area, eficiencia, peso, garantia1)
 VALUES(6, 'CS3W-425P', 'HiKu SUPER POLY DE ALTA POTÊNCIA 425W', 25, 0.425, 2.2092, 19.2, 24.9, 12);
 
-/*Criar triggers*/
-DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_INSERT`;
-
-DELIMITER $$
-USE `volt`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_INSERT` AFTER INSERT ON `cidade` FOR EACH ROW
-BEGIN
-insert into cidade_media (media, codcidade) 
-values
-((select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
-from cidade where id = new.id ), new.id );
-END$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `volt`.`cidade_AFTER_UPDATE`;
-DELIMITER $$
-USE `volt`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `volt`.`cidade_AFTER_UPDATE` AFTER UPDATE ON `cidade` FOR EACH ROW
-BEGIN
-update cidade_media set media = (select (JAN+FEB+MAR+ABR+MAI+JUN+JUL+AGO+ cidade.SET + cidade.OUT + NOV + DEZ)/12 as media 
-from cidade where id = new.id ) where codcidade = new.id;
-END$$
-DELIMITER ;
 
 /*Insert Cidades*/
 
@@ -452,40 +453,48 @@ insert INTO `volt`.`cidade` ( `nome`, `JAN`, `FEB`, `MAR`, `ABR`, `MAI`, `JUN`, 
 insert INTO `volt`.`cidade` ( `nome`, `JAN`, `FEB`, `MAR`, `ABR`, `MAI`, `JUN`, `JUL`, `AGO`, `SET`, `OUT`, `NOV`, `DEZ`, `distancia`, `cep`) VALUES ('Wenceslau Braz', 5.114, 5.466, 5.332, 5.191, 4.463, 4.192, 4.428, 5.331, 5.009, 5.097, 5.439, 5.442, 540, '84950-000');
 insert INTO `volt`.`cidade` ( `nome`, `JAN`, `FEB`, `MAR`, `ABR`, `MAI`, `JUN`, `JUL`, `AGO`, `SET`, `OUT`, `NOV`, `DEZ`, `distancia`, `cep`) VALUES ('Xambrê', 5.459, 5.591, 5.581, 5.207, 4.435, 4.129, 4.346, 5.229, 4.961, 5.279, 5.564, 5.682, 350, '87535-000');
 
+/*Insert Padrões entrada*/
+INSERT INTO `volt`.`padroes_entrada` (`descricao`, `minimo`, `coluna1`, `solo`) VALUES ('BIFASICO', '220', '50', '1');
+INSERT INTO `volt`.`padroes_entrada` (`descricao`, `minimo`, `coluna1`, `solo`) VALUES ('MONOFASICO_RURAL', '254', '50', '2');
+INSERT INTO `volt`.`padroes_entrada` (`descricao`, `minimo`, `coluna1`, `solo`) VALUES ('TRIFASICO_13800V_380V', '658.1793', '100', '4');
+INSERT INTO `volt`.`padroes_entrada` (`descricao`, `minimo`, `coluna1`, `solo`) VALUES ('TRIFASICO_220V', '381.05118', '100', '3');
+INSERT INTO `volt`.`padroes_entrada` (`descricao`, `minimo`, `coluna1`, `solo`) VALUES ('TRIFASICO_34500V_380V', '658', '100', '5');
+
+
 /*Insert Disjutores*/            
 
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('BI-220-50A', '11', '50', '1');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('BI-220-63A', '14', '63', '1');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-50A', '10', '50', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-70A', '15', '70', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-100A', '25', '100', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-150A', '37', '150', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-175A', '44', '175', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-200A', '50', '200', '2');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-50A', '19', '50', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-63A', '24', '63', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-80A', '30', '80', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-100A', '38', '100', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-125A', '48', '125', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-150A', '57', '150', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-175A', '67', '175', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-200A', '76', '200', '3');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-50A', '46', '50', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-70A', '69', '70', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '114', '125', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-175A', '171', '175', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-200A', '176', '200', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-250A', '228', '250', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-350A', '342', '350', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-500A', '455', '500', '4');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-50A', '45', '50', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-70A', '69', '70', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '114', '125', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '171', '175', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-200A', '76', '200', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-250A', '228', '250', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-350A', '342', '350', '5');
-INSERT INTO `volt`.`disj_entrada` (`decricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-500A', '455', '500', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('BI-220-50A', '11', '50', '1');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('BI-220-63A', '14', '63', '1');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-50A', '10', '50', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-70A', '15', '70', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-100A', '25', '100', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-150A', '37', '150', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-175A', '44', '175', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('MR-254-200A', '50', '200', '2');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-50A', '19', '50', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-63A', '24', '63', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-80A', '30', '80', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-100A', '38', '100', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-125A', '48', '125', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-150A', '57', '150', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-175A', '67', '175', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-220-200A', '76', '200', '3');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-50A', '46', '50', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-70A', '69', '70', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '114', '125', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-175A', '171', '175', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-200A', '176', '200', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-250A', '228', '250', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-350A', '342', '350', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-500A', '455', '500', '4');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-50A', '45', '50', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-70A', '69', '70', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '114', '125', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-125A', '171', '175', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-200A', '76', '200', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-250A', '228', '250', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-350A', '342', '350', '5');
+INSERT INTO `volt`.`disj_entrada` (`descricao`, `demanda`, `amper`, `codPadraoId`) VALUES ('TRI-380-500A', '455', '500', '5');
 
 /*Insert calculo_kwp*/
 insert INTO `volt`.`calculo_kwp` ( `POTEN1`, `POTEN2`, `TELHADO`, `SOLO`, `codPadraoId`) VALUES ('0', 5, 4400, 0, 1);
