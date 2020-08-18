@@ -29,7 +29,7 @@ export default class FormDatabase extends React.Component {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS tarifa" +
           "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "valor DOUBLE, descricao TEXT)"
+          "valor DOUBLE)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS padroes_entrada" +
@@ -61,6 +61,7 @@ export default class FormDatabase extends React.Component {
       mensagem: "",
       openIP: false,
       mensagemIP: "Atualizando Tabela X",
+      tipoIcone:"loading"
     };
   }
 
@@ -77,6 +78,7 @@ export default class FormDatabase extends React.Component {
     if (modulos == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Erro na requisição" });
+      this.setState({ tipoIcone: "error" });
     } else {
       this.setState({ modulos });
       db.transaction((tx) => {
@@ -141,6 +143,7 @@ export default class FormDatabase extends React.Component {
     if (cidades == "Error" || medias == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Erro na requisição" });
+      this.setState({ tipoIcone: "error" });
       return "Error";
     } else {
       this.setState({ cidades, medias });
@@ -175,22 +178,11 @@ export default class FormDatabase extends React.Component {
     if (tarifas == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Erro na requisição" });
+      this.setState({ tipoIcone: "error" });
     } else {
       this.setState({ tarifas });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tarifa");
-        tx.executeSql(
-          "INSERT INTO tarifa (descricao)" + "values (?)",
-          ["Selecione"],
-          (txObj, resultSet) =>
-            this.setState({
-              data: this.state.data.concat({
-                id: resultSet.insertId,
-                descricao: "Selecione",
-              }),
-            }),
-          (txObj, error) => console.log("Error", error)
-        );
         for (let x = 0; x < this.state.tarifas.length; x++) {
           tx.executeSql(
             "INSERT INTO tarifa (valor)" + "values (?)",
@@ -214,6 +206,7 @@ export default class FormDatabase extends React.Component {
     if (tipoRede == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Erro ao atualizar dados" });
+      this.setState({ tipoIcone: "error" });
     } else {
       this.setState({ tipoRede });
       db.transaction((tx) => {
@@ -266,6 +259,7 @@ export default class FormDatabase extends React.Component {
     if (Disjuntores == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Valide o IP do servidor !!" });
+      this.setState({ tipoIcone: "error" });
     } else {
       this.setState({ Disjuntores });
       db.transaction((tx) => {
@@ -317,6 +311,7 @@ export default class FormDatabase extends React.Component {
     if (tipoInstall == "Error") {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Verifique se você está online!" });
+      this.setState({ tipoIcone: "error" });
     } else {
       this.setState({ tipoInstall });
       db.transaction((tx) => {
@@ -382,7 +377,13 @@ export default class FormDatabase extends React.Component {
                   mensagemIP: "Atualizando Tabela Tipo Instalação",
                 });
                 setTimeout(() => {
-                  this.setState({ openIP: false });
+                  this.setState({
+                    mensagemIP: "Concluído com Sucesso!!",
+                    tipoIcone:"sucess"
+                  });
+                  setTimeout(() => {
+                    this.setState({ openIP: false });
+                  }, 1000);
                 }, 1000);
               }, 4000);
             }, 2000);
@@ -433,7 +434,7 @@ export default class FormDatabase extends React.Component {
           open={this.state.open}
           execute={this.openModal}
         />        
-        <ModalIP open={this.state.openIP} mensagem={this.state.mensagemIP} tipoIcone='loading' />
+        <ModalIP open={this.state.openIP} mensagem={this.state.mensagemIP} tipoIcone={this.state.tipoIcone} />
       </View>
     );
   }

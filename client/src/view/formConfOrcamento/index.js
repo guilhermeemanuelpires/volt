@@ -11,6 +11,7 @@ import InputPattern from "../components/InputPattern/index";
 import { DatabaseConnection } from "../../database/connection";
 import Calculos from "../../util/index";
 import Style from "../styles/styles";
+import { Portal } from "react-native-paper";
 var db = null;
 export default class formConfOrcamento extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class formConfOrcamento extends Component {
 
       tarifaSel: "",
       tarifas: [],
+      tarifa: 0,
 
       disjuntorSel: "",
       disjuntores: [],
@@ -46,28 +48,36 @@ export default class formConfOrcamento extends Component {
     this.listDisjuntores();
     this.listTipoInstall();
     this.listModulos();
-    this.num_modulo();
-    this.potencia_sistema();
-    this.potencia_instalada();
   }
 
   setTaxaPerda = (taxaPerda) => {
     this.setState({ taxaPerda });
+    this.potencia_sistema();
   };
 
   setMediaConsumoMes = (mediaConsumoMes) => {
     this.setState({ mediaConsumoMes });
+    this.potencia_sistema();
   };
 
   setTipoRedeSel = (tipoRedeSel) => {
     this.setState({ tipoRedeSel });
+    this.potencia_sistema();
   };
 
   setDisjuntorSel = (disjuntorSel) => {
     this.setState({ disjuntorSel });
+    this.potencia_sistema();
   };
 
   setTarifaSel = (tarifaSel) => {
+    const tarifas = this.state.tarifas.find((tarifa) => {
+      if (tarifa.id == tarifaSel) {
+        return tarifa;
+      }
+    });
+    this.setState({tarifa: tarifas.valor} )
+    this.potencia_sistema();
     this.setState({ tarifaSel });
   };
 
@@ -82,9 +92,9 @@ export default class formConfOrcamento extends Component {
         return modulo;
       }
     });
-
-    console.log(potenciaModulo)
     this.setState({ potencia: potenciaModulo.potencia });
+    this.num_modulo(potenciaModulo.potencia)
+    this.potencia_sistema();
   };
 
   setNumeroModulos = (numeroModulos) => {
@@ -162,24 +172,28 @@ export default class formConfOrcamento extends Component {
     });
   };
 
-  num_modulo = async () => {
-
-    const valor = await Calculos.num_modulos(33.32444681, 0.360)  
-    this.setState({numeroModulos: valor})
-
+  potencia_sistema = () => {
+    const valor = Calculos.potencia_sistema(
+      this.state.mediaConsumoMes,
+      5,
+      this.state.taxaPerda
+    );
+    this.setState({ calculoPotenciaSistema: valor });
+    
   };
 
-  potencia_sistema = async () => {
-
-    const valor = await Calculos.potencia_sistema(4000, 5 , 0.8)
-    this.setState({calculoPotenciaSistema: valor})
-
+  num_modulo = (potencia) => {
+    const valor = Calculos.num_modulos(this.state.calculoPotenciaSistema, potencia);
+    this.setState({ numeroModulos: valor });
+    this.potencia_instalada(valor, potencia)
   };
 
-  potencia_instalada = async () => {
-    console.log(this.state.numeroModulos)
-    const valor = await Calculos.potencia_instalada(this.state.numeroModulos, 0.360)
-    this.setState({calculoPotenciaInstalada: valor})
+  potencia_instalada =  (numModulo, potencia) => {
+    const valor =  Calculos.potencia_instalada(
+      numModulo,
+      potencia
+    );
+    this.setState({ calculoPotenciaInstalada: valor });
   };
 
   render() {
@@ -195,14 +209,6 @@ export default class formConfOrcamento extends Component {
               lista={this.state.tipoRedes}
               sel={this.state.tipoRedeSel}
               handleClick={this.setTipoRedeSel}
-            />
-
-            <Text style={Style.alinhaLabel}>Tarifa</Text>
-            <Dropdow
-              descricao="valor"
-              lista={this.state.tarifas}
-              sel={this.state.tarifaSel}
-              handleClick={this.setTarifaSel}
             />
 
             <Text style={Style.alinhaLabel}>Disjuntor</Text>
@@ -227,14 +233,19 @@ export default class formConfOrcamento extends Component {
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
-
             <Text style={Style.alinhaLabel}>Taxa Perda</Text>
             <InputPattern
               keyboardType="numeric"
               value={this.state.taxaPerda}
               handleClick={this.setTaxaPerda}
             />
-
+            <Text style={Style.alinhaLabel}>Tarifa</Text>
+            <Dropdow
+              descricao="valor"
+              lista={this.state.tarifas}
+              sel={this.state.tarifaSel}
+              handleClick={this.setTarifaSel}
+            />
             <Text style={Style.alinhaLabel}>Módulo</Text>
             <View
               style={{
@@ -262,9 +273,9 @@ export default class formConfOrcamento extends Component {
 
             <Text style={Style.alinhaLabel}>Número de Modulos</Text>
             <TextInput
-              style={Style.input}              
+              style={Style.input}
               editable={false}
-              value={String(this.state.numeroModulos)}      
+              value={String(this.state.numeroModulos)}
             />
 
             <Text style={Style.alinhaLabel}>
