@@ -5,13 +5,17 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Image
 } from "react-native";
 import Dropdow from "../components/dropdown/index";
+import ModalCalculo from "../components/modalCalc/index";
 import InputPattern from "../components/InputPattern/index";
 import { DatabaseConnection } from "../../database/connection";
 import Calculos from "../../util/index";
 import Style from "../styles/styles";
-import { Portal } from "react-native-paper";
+
+
+
 var db = null;
 export default class formConfOrcamento extends Component {
   constructor(props) {
@@ -42,6 +46,7 @@ export default class formConfOrcamento extends Component {
       calculoPotenciaInstalada: 0,
       valorFinal: "",
       valorKW: "",
+      openCalculo: false
     };
     this.listTipo_Rede();
     this.listTarifas();
@@ -76,7 +81,7 @@ export default class formConfOrcamento extends Component {
         return tarifa;
       }
     });
-    this.setState({tarifa: tarifas.valor} )
+    this.setState({ tarifa: tarifas.valor })
     this.potencia_sistema();
     this.setState({ tarifaSel });
   };
@@ -117,9 +122,18 @@ export default class formConfOrcamento extends Component {
     this.setState({ valorKW });
   };
 
+  openModalCalculo = (openCalculo) => {
+    this.setState({ openCalculo });
+  };
+
+  _Calculos() {
+    this.openModalCalculo(true);
+  }
+
   _Submit() {
     alert("Gera Pdf Dus Guri");
   }
+  
   listModulos = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
@@ -131,6 +145,7 @@ export default class formConfOrcamento extends Component {
       );
     });
   };
+
   listTarifas = async () => {
     await db.transaction((tx) => {
       tx.executeSql("SELECT id, valor FROM tarifa", [], (trans, result) => {
@@ -138,6 +153,7 @@ export default class formConfOrcamento extends Component {
       });
     });
   };
+
   listTipo_Rede = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
@@ -149,6 +165,7 @@ export default class formConfOrcamento extends Component {
       );
     });
   };
+
   listDisjuntores = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
@@ -160,6 +177,7 @@ export default class formConfOrcamento extends Component {
       );
     });
   };
+
   listTipoInstall = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
@@ -179,7 +197,7 @@ export default class formConfOrcamento extends Component {
       this.state.taxaPerda
     );
     this.setState({ calculoPotenciaSistema: valor });
-    
+
   };
 
   num_modulo = (potencia) => {
@@ -188,8 +206,8 @@ export default class formConfOrcamento extends Component {
     this.potencia_instalada(valor, potencia)
   };
 
-  potencia_instalada =  (numModulo, potencia) => {
-    const valor =  Calculos.potencia_instalada(
+  potencia_instalada = (numModulo, potencia) => {
+    const valor = Calculos.potencia_instalada(
       numModulo,
       potencia
     );
@@ -269,58 +287,24 @@ export default class formConfOrcamento extends Component {
                   value={String(this.state.potencia)}
                 />
               </View>
+            </View>           
+
+            <View style={{ alignItems: "flex-end" }}>
+              <TouchableOpacity
+                style={Style.botaoCalc}
+                onPress={() => {
+                  this._Calculos();
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={require("../../../assets/calc.png")}
+                    style={{ width: 30, height: 35 }}
+                  />
+                </View>
+              </TouchableOpacity>
             </View>
 
-            <Text style={Style.alinhaLabel}>Número de Modulos</Text>
-            <TextInput
-              style={Style.input}
-              editable={false}
-              value={String(this.state.numeroModulos)}
-            />
-
-            <Text style={Style.alinhaLabel}>
-              Cálculo da Potência do Sistema
-            </Text>
-            <InputPattern
-              keyboardType="numeric"
-              editable={false}
-              value={String(this.state.calculoPotenciaSistema)}
-              handleClick={this.setCalculoPotenciaSistema}
-            />
-
-            <Text style={Style.alinhaLabel}>Cálculo da potência instalada</Text>
-            <InputPattern
-              keyboardType="numeric"
-              editable={false}
-              value={String(this.state.calculoPotenciaInstalada)}
-              handleClick={this.setCalculoPotenciaInstalada}
-            />
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ flex: 0.6 }}>
-                <Text style={Style.alinhaLabel}>Valor Final</Text>
-                <InputPattern
-                  keyboardType="numeric"
-                  editable={false}
-                  value={this.state.valorFinal}
-                  handleClick={this.setValorFinal}
-                />
-              </View>
-              <View style={{ flex: 0.6 }}>
-                <Text style={Style.alinhaLabel}>Valor do KW/R$</Text>
-                <InputPattern
-                  keyboardType="numeric"
-                  editable={false}
-                  value={this.state.valorKW}
-                  handleClick={this.setValorKW}
-                />
-              </View>
-            </View>
           </View>
         </ScrollView>
 
@@ -332,6 +316,18 @@ export default class formConfOrcamento extends Component {
         >
           <Text style={Style.labelBotao}>Gerar</Text>
         </TouchableOpacity>
+
+        <ModalCalculo
+          mensagem={this.state.mensagem}
+          open={this.state.openCalculo}
+          execute={this.openModalCalculo}
+          numeroModulos={0}
+          calculoPotenciaSistema={0}
+          calculoPotenciaInstalada={0}
+          valorFinal={0}
+          valorKW={0}
+        />
+
       </View>
     );
   }
