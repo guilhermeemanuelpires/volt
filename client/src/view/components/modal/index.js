@@ -15,10 +15,8 @@ export default class MsgModal extends Component {
         this.props.execute({ visible })
     }
 
-    render() {
-        const { modalVisible } = this.props;
+    render() {        
         return (
-
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -42,7 +40,6 @@ export default class MsgModal extends Component {
                     </View>
                 </View>
             </Modal>
-
         );
     }
 }

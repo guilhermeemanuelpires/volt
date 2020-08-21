@@ -78,6 +78,24 @@ export default styles = StyleSheet.create({
 
         elevation: 12,
     },
+    botaoCalc: {        
+        margin: 10,
+        height: 50,
+        width: 75,
+        borderRadius: 10,
+        justifyContent: 'center',
+        backgroundColor: '#F5BD42',
+        shadowColor: "#000",
+
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+
+        elevation: 12,
+    },
     botaoDisabled: {
         margin: 10,
         height: 50,
