@@ -21,6 +21,7 @@ export default class formConfOrcamento extends Component {
     super(props);
     this.state = {
       tipoRedeSel: "",
+      tipoRedeID: 0,
       tipoRedes: [],
 
       tarifaSel: "",
@@ -31,6 +32,7 @@ export default class formConfOrcamento extends Component {
       disjuntores: [],
 
       instalacaoSel: "",
+      instalacaoDesc: "",
       tipoInstalacao: [],
 
       mediaConsumoMes: "",
@@ -63,6 +65,12 @@ export default class formConfOrcamento extends Component {
 
   setTipoRedeSel = (tipoRedeSel) => {
     this.setState({ tipoRedeSel });
+    const tipoRede = this.state.tipoRedes.find((tipoRede) => {
+      if (tipoRede.id == tipoRedeSel) {
+        return tipoRede;
+      }
+    });
+    this.setState({tipoRedeID: tipoRede.id})
   };
 
   setDisjuntorSel = (disjuntorSel) => {
@@ -81,6 +89,12 @@ export default class formConfOrcamento extends Component {
 
   setInstalacaoSel = (instalacaoSel) => {
     this.setState({ instalacaoSel });
+    const instalacao = this.state.tipoInstalacao.find((instalacao) => {
+      if (instalacao.id == instalacaoSel) {
+        return instalacao;
+      }
+    });
+    this.setState({instalacaoDesc: instalacao.descricao})
   };
 
   setModuloSel = (moduloSel) => {
@@ -138,7 +152,6 @@ export default class formConfOrcamento extends Component {
       num_modulos,
       valCalculos.potencia
     );
-
     this.setState({
       calculoPotenciaInstalada: potencia_instalada.toFixed(2),
       numeroModulos: num_modulos,
