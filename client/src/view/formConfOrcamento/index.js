@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Dropdow from "../components/dropdown/index";
 import ModalCalculo from "../components/modalCalc/index";
+import MsgModal from "../components/modal/index";
 import InputPattern from "../components/InputPattern/index";
 import { DatabaseConnection } from "../../database/connection";
 import Calculos from "../../util/index";
@@ -47,6 +48,8 @@ export default class formConfOrcamento extends Component {
       valorFinal: "",
       valorKW: "",
       openCalculo: false,
+      mensagem: "",
+      open: false
     };
     this.listTipo_Rede();
     this.listTarifas();
@@ -70,7 +73,7 @@ export default class formConfOrcamento extends Component {
         return tipoRede;
       }
     });
-    this.setState({tipoRedeID: tipoRede.id})
+    this.setState({ tipoRedeID: tipoRede.id })
   };
 
   setDisjuntorSel = (disjuntorSel) => {
@@ -94,7 +97,7 @@ export default class formConfOrcamento extends Component {
         return instalacao;
       }
     });
-    this.setState({instalacaoDesc: instalacao.descricao})
+    this.setState({ instalacaoDesc: instalacao.descricao })
   };
 
   setModuloSel = (moduloSel) => {
@@ -131,37 +134,85 @@ export default class formConfOrcamento extends Component {
     this.setState({ openCalculo });
   };
 
+  openModal = (open) => {
+    this.setState({ open });
+  };
+
   _Calculos() {
-    const valCalculos = {
-      potencia: this.state.potencia,
+    if (this._onValidaFom()) {      
+      const valCalculos = {
+        potencia: this.state.potencia,
+        mediaConsumoMes: this.state.mediaConsumoMes,
+        taxaPerda: this.state.taxaPerda,
+      };
+
+      const potencia_sistema = Calculos.potencia_sistema(
+        valCalculos.mediaConsumoMes,
+        this.props.route.params.media,
+        valCalculos.taxaPerda
+      );
+      const num_modulos = Calculos.num_modulos(
+        potencia_sistema,
+        valCalculos.potencia
+      );
+
+      const potencia_instalada = Calculos.potencia_instalada(
+        num_modulos,
+        valCalculos.potencia
+      );
+      this.setState({
+        calculoPotenciaInstalada: potencia_instalada.toFixed(2),
+        numeroModulos: num_modulos,
+        calculoPotenciaSistema: potencia_sistema.toFixed(2)
+      });
+      this.openModalCalculo(true);
+    };
+  }
+
+  _geToMessage(orcamentoConfig) {
+    if (orcamentoConfig.tipoRedeSel <= 1) return "Selecione o Tipo de Rede";
+    if (orcamentoConfig.disjuntorSel <= 1) return "Selecione o Disjuntor";
+    if (orcamentoConfig.instalacaoSel <= 1) return "Selecione o Tipo de instalação"
+    if (!orcamentoConfig.mediaConsumoMes) return "Informe a Média de Consumo Mês";
+    if (orcamentoConfig.moduloSel <= 1) return "Informe a Taxa de Perda";
+    if (orcamentoConfig.tarifaSel <= 0) return "Selecione a Tarifa";
+    if (!orcamentoConfig.taxaPerda) return "Selecione o Módulo";
+  }
+
+  _onValidaFom = () => {    
+
+    const orcamentoConfig = {
+      tipoRedeSel: this.state.tipoRedeSel,
+      disjuntorSel: this.state.disjuntorSel,
+      instalacaoSel: this.state.instalacaoSel,
       mediaConsumoMes: this.state.mediaConsumoMes,
       taxaPerda: this.state.taxaPerda,
-    };
+      tarifaSel: this.state.tarifaSel,
+      moduloSel: this.state.moduloSel
+    }
 
-    const potencia_sistema = Calculos.potencia_sistema(
-      valCalculos.mediaConsumoMes,
-      this.props.route.params.media,
-      valCalculos.taxaPerda
-    );
-    const num_modulos = Calculos.num_modulos(
-      potencia_sistema,
-      valCalculos.potencia
-    );
+    if ((orcamentoConfig.tipoRedeSel <= 1) ||
+      (orcamentoConfig.disjuntorSel <= 1) ||
+      (orcamentoConfig.instalacaoSel <= 1) ||
+      (!orcamentoConfig.mediaConsumoMes) ||
+      (orcamentoConfig.moduloSel <= 1) ||
+      (orcamentoConfig.tarifaSel <= 0) ||
+      (!orcamentoConfig.taxaPerda)
+    ) {
+      const msg = this._geToMessage(orcamentoConfig);
+      this.setState({ mensagem: msg });
+      this.openModal(true);
+      return false;
+    } else {
+      return true;
+    }
 
-    const potencia_instalada = Calculos.potencia_instalada(
-      num_modulos,
-      valCalculos.potencia
-    );
-    this.setState({
-      calculoPotenciaInstalada: potencia_instalada.toFixed(2),
-      numeroModulos: num_modulos,
-      calculoPotenciaSistema: potencia_sistema.toFixed(2)
-    });
-    this.openModalCalculo(true);
   }
 
   _Submit() {
-    alert("Gera Pdf Dus Guri");
+    if (this._onValidaFom()) {
+      alert("Gera Pdf Dus Guri");
+    };
   }
 
   listModulos = async () => {
@@ -226,7 +277,7 @@ export default class formConfOrcamento extends Component {
 
         <ScrollView>
           <View style={Style.ajustaCampos}>
-            <Text style={Style.alinhaLabel}>Tipo De Rede</Text>
+            <Text style={Style.alinhaLabel}>Tipo de Rede</Text>
             <Dropdow
               descricao="descricao"
               lista={this.state.tipoRedes}
@@ -253,12 +304,13 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Média de Consumo Mês</Text>
             <InputPattern
               keyboardType="numeric"
+              mask='NUMERICO'
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
             <Text style={Style.alinhaLabel}>Taxa Perda</Text>
             <InputPattern
-              keyboardType="numeric"
+              keyboardType="numeric"              
               value={this.state.taxaPerda}
               handleClick={this.setTaxaPerda}
             />
@@ -322,7 +374,6 @@ export default class formConfOrcamento extends Component {
         </TouchableOpacity>
 
         <ModalCalculo
-          mensagem={this.state.mensagem}
           open={this.state.openCalculo}
           execute={this.openModalCalculo}
           numeroModulos={this.state.numeroModulos}
@@ -331,6 +382,13 @@ export default class formConfOrcamento extends Component {
           valorFinal={0}
           valorKW={0}
         />
+
+        <MsgModal
+          mensagem={this.state.mensagem}
+          open={this.state.open}
+          execute={this.openModal}
+        />
+
       </View>
     );
   }
