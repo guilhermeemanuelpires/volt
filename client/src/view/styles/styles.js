@@ -68,21 +68,19 @@ export default styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#11BF4E',
         shadowColor: "#000",
-
         shadowOffset: {
             width: 0,
             height: 6,
         },
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
-
-        elevation: 12,
+        elevation: 12
     },
     botaoCalc: {        
         margin: 10,
         height: 50,
-        width: 75,
-        borderRadius: 10,
+        width: 50,
+        borderRadius: 50,
         justifyContent: 'center',
         backgroundColor: '#F5BD42',
         shadowColor: "#000",
@@ -109,7 +107,7 @@ export default styles = StyleSheet.create({
             height: 6,
         },
         shadowOpacity: 0.37,
-        shadowRadius: 7.49,
+        shadowRadius: 50,
 
         elevation: 12,
         opacity: 0.3,
@@ -119,5 +117,23 @@ export default styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: 'bold',
         color: '#FFFFFF'
+    },
+    botaoLupa :{
+        // margin: 1,
+        height: 40,
+        width: 40,
+        borderRadius: 50,
+        justifyContent: 'center',
+        backgroundColor: '#51ACFF',
+        shadowColor: "#000",
+
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 7,
+
+        elevation: 7,
     }
 });

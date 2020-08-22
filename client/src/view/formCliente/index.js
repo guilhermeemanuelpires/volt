@@ -4,15 +4,16 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,  
+  Image
 } from "react-native";
-import Dropdow from "../components/dropdown/index";
 import InputPattern from "../components/InputPattern/index";
-import SearchableDropdown from "react-native-searchable-dropdown";
 import MsgModal from "../components/modal/index";
 import { DatabaseConnection } from "../../database/connection";
 import Style from "../styles/styles";
 import StyleForm from "./styles";
+
+import ModalCidade from "../components/modalCidade/index";
 
 var db = null;
 export default class FormCli extends Component {
@@ -28,16 +29,19 @@ export default class FormCli extends Component {
       endereco: "",
       cep: "",
       cidadeSel: "",
+      cidadeDesc: "",
       cidades: [],
       bntActive: true,
       open: false,
-      mensagem: ""
+      mensagem: "",
+      openTeste: ""
     };
-  } 
-  componentDidMount(){
+  }
+
+  componentDidMount() {
     this.listCidades()
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.listCidades()
   }
   setNome = (nome) => {
@@ -71,6 +75,18 @@ export default class FormCli extends Component {
   openModal = (open) => {
     this.setState({ open });
   };
+
+  openModalTeste = (openTeste) => {
+    this.setState({ openTeste });
+  };
+
+  setSelecionados = (item) => {
+    this.setState({
+      cidadeSel: String(item.media),
+      cep: item.cep,
+      cidadeDesc: item.name
+    });
+  }
 
   _geToMessage(cliente) {
     if (!cliente.nome) return "Necessário informar o Nome do Cliente";
@@ -117,7 +133,7 @@ export default class FormCli extends Component {
   listCidades = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT id, nome as name, media, cep FROM cidade",
+        "SELECT id, nome as name, media, cep FROM cidade order by nome ASC",
         [],
         (trans, result) => {
           this.setState({ cidades: result["rows"]._array });
@@ -130,94 +146,83 @@ export default class FormCli extends Component {
       <View style={Style.container}>
         <Text style={Style.titulo}>Dados Do Cliente</Text>
 
-        {/* <ScrollView> */}
-        <View style={Style.ajustaCampos}>
-          <Text style={Style.alinhaLabel}>Finame</Text>
-          <InputPattern value={this.state.finame} editable={false} />
+        <ScrollView>
 
-          <Text style={Style.alinhaLabel}>Nome Cliente</Text>
-          <InputPattern value={this.state.nome} handleClick={this.setNome} />
+          <View style={Style.ajustaCampos}>
+            <Text style={Style.alinhaLabel}>Finame</Text>
+            <InputPattern value={this.state.finame} editable={false} />
 
-          <Text style={Style.alinhaLabel}>CPF/CNPJ</Text>
-          <InputPattern
-            mask="CNPJF"
-            maxLength={18}
-            value={this.state.cnpjf}
-            handleClick={this.setCnpjf}
-            keyboardType="number-pad"
-          />
+            <Text style={Style.alinhaLabel}>Nome Cliente</Text>
+            <InputPattern value={this.state.nome} handleClick={this.setNome} />
 
-          <Text style={Style.alinhaLabel}>Contato</Text>
-          <InputPattern
-            mask="FONE"
-            maxLength={15}
-            value={this.state.contato}
-            handleClick={this.setContato}
-            keyboardType="number-pad"
-          />
+            <Text style={Style.alinhaLabel}>CPF/CNPJ</Text>
+            <InputPattern
+              mask="CNPJF"
+              maxLength={18}
+              value={this.state.cnpjf}
+              handleClick={this.setCnpjf}
+              keyboardType="number-pad"
+            />
 
-          <Text style={Style.alinhaLabel}>Endereço</Text>
-          <InputPattern
-            value={this.state.endereco}
-            handleClick={this.setEndereco}
-          />
+            <Text style={Style.alinhaLabel}>Contato</Text>
+            <InputPattern
+              mask="FONE"
+              maxLength={15}
+              value={this.state.contato}
+              handleClick={this.setContato}
+              keyboardType="number-pad"
+            />
 
-          <Text style={Style.alinhaLabel}>Cidade</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flex: 0.8 }}>
+            <Text style={Style.alinhaLabel}>Endereço</Text>
+            <InputPattern
+              value={this.state.endereco}
+              handleClick={this.setEndereco}
+            />
 
-              <SearchableDropdown                
-                onTextChange={(text) => {}}
-                onItemSelect={(item) =>
-                  this.setState({
-                    cidadeSel: String(item.media),
-                    cep: item.cep,
-                  })
-                }
-                containerStyle={{ padding: 5 }}
-                textInputStyle={Style.inputPiker}
-                itemStyle={{
-                  padding: 5,                  
-                  borderColor: "#bbb",
-                  borderWidth: 1,
-                }}
-                itemTextStyle={{
-                  color: "#222",
-                }}
-                itemsContainerStyle={{
-                  maxHeight: "60%",
-                }}
-                items={this.state.cidades}
-                defaultIndex={2}
-                placeholder="pesquisar"
-                resetValue={false}
-                underlineColorAndroid="transparent"
-              />
+            <Text style={Style.alinhaLabel}>Cidade</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flex: 0.8 }}>
+                <TextInput style={Style.inputPiker}
+                  onPress={() => this.openModalTeste(true)}
+                  editable={false}
+                  value={this.state.cidadeDesc}
+                />
+              </View>
+              <View style={{ flex: 0.2 }}>
+                <TouchableOpacity                  
+                  style={Style.botaoLupa}
+                  onPress={() => this.openModalTeste(true)}
+                >
+                  <Image
+                    source={require("../../../assets/lupa.png")}
+                    style={{ width: 30, height: 30, margin: 5}}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 0.3 }}>
+                <TextInput
+                  keyboardType="numeric"
+                  editable={false}
+                  style={StyleForm.inputRight}
+                  value={this.state.cidadeSel}
+                />
+              </View>
             </View>
-            <View style={{ flex: 0.3 }}>
-              <TextInput
-                keyboardType="numeric"
-                editable={false}
-                style={StyleForm.inputRight}
-                value={this.state.cidadeSel}
-              />
-            </View>
+            <Text style={Style.alinhaLabel}>Cep</Text>
+            <InputPattern
+              mask="CEP"
+              maxLength={10}
+              value={this.state.cep}
+              handleClick={this.setCep}
+              keyboardType="number-pad"
+            />
           </View>
-          <Text style={Style.alinhaLabel}>Cep</Text>
-          <InputPattern
-            mask="CEP"
-            maxLength={10}
-            value={this.state.cep}
-            handleClick={this.setCep}
-            keyboardType="number-pad"
-          />
-        </View>
-        {/* </ScrollView> */}
+        </ScrollView >
 
         <TouchableOpacity
           style={!this.state.bntActive ? Style.botaoDisabled : Style.botao}
@@ -234,6 +239,14 @@ export default class FormCli extends Component {
           open={this.state.open}
           execute={this.openModal}
         />
+
+        <ModalCidade
+          open={this.state.openTeste}
+          execute={this.openModalTeste}
+          cidades={this.state.cidades}
+          selecionado={this.setSelecionados}
+        />
+
       </View>
     );
   }
