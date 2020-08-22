@@ -82,7 +82,7 @@ export default class FormCli extends Component {
 
   setSelecionados = (item) => {
     this.setState({
-      cidadeSel: String(item.media),
+      cidadeSel: item.media.toFixed(2),
       cep: item.cep,
       cidadeDesc: item.name
     });
@@ -112,7 +112,7 @@ export default class FormCli extends Component {
       this.setState({ mensagem: msg });
       this.openModal(true);
     } else {
-      this.props.navigation.navigate("formConfOrcamento");
+      this.props.navigation.navigate('formConfOrcamento', {media: this.state.cidadeSel})
     }
   };
 
