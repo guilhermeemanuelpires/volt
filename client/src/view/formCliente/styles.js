@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export default styles = StyleSheet.create({
     inputRight: {
-        height: 50,
+        height: 45,
         borderRadius: 10,
         paddingLeft: 15,
         paddingRight: 15,

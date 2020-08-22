@@ -299,7 +299,7 @@ export default class formConfOrcamento extends Component {
                 <View style={{ alignItems: "center" }}>
                   <Image
                     source={require("../../../assets/calc.png")}
-                    style={{ width: 30, height: 35 }}
+                    style={{ width: 30, height: 30 }}
                   />
                 </View>
               </TouchableOpacity>
