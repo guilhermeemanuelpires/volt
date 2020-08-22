@@ -5,7 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
 import Dropdow from "../components/dropdown/index";
 import ModalCalculo from "../components/modalCalc/index";
@@ -13,8 +13,6 @@ import InputPattern from "../components/InputPattern/index";
 import { DatabaseConnection } from "../../database/connection";
 import Calculos from "../../util/index";
 import Style from "../styles/styles";
-
-
 
 var db = null;
 export default class formConfOrcamento extends Component {
@@ -46,7 +44,7 @@ export default class formConfOrcamento extends Component {
       calculoPotenciaInstalada: 0,
       valorFinal: "",
       valorKW: "",
-      openCalculo: false
+      openCalculo: false,
     };
     this.listTipo_Rede();
     this.listTarifas();
@@ -57,22 +55,18 @@ export default class formConfOrcamento extends Component {
 
   setTaxaPerda = (taxaPerda) => {
     this.setState({ taxaPerda });
-    this.potencia_sistema();
   };
 
   setMediaConsumoMes = (mediaConsumoMes) => {
     this.setState({ mediaConsumoMes });
-    this.potencia_sistema();
   };
 
   setTipoRedeSel = (tipoRedeSel) => {
     this.setState({ tipoRedeSel });
-    this.potencia_sistema();
   };
 
   setDisjuntorSel = (disjuntorSel) => {
     this.setState({ disjuntorSel });
-    this.potencia_sistema();
   };
 
   setTarifaSel = (tarifaSel) => {
@@ -81,8 +75,7 @@ export default class formConfOrcamento extends Component {
         return tarifa;
       }
     });
-    this.setState({ tarifa: tarifas.valor })
-    this.potencia_sistema();
+    this.setState({ tarifa: tarifas.valor });
     this.setState({ tarifaSel });
   };
 
@@ -98,8 +91,6 @@ export default class formConfOrcamento extends Component {
       }
     });
     this.setState({ potencia: potenciaModulo.potencia });
-    this.num_modulo(potenciaModulo.potencia)
-    this.potencia_sistema();
   };
 
   setNumeroModulos = (numeroModulos) => {
@@ -127,13 +118,39 @@ export default class formConfOrcamento extends Component {
   };
 
   _Calculos() {
+    const valCalculos = {
+      potencia: this.state.potencia,
+      mediaConsumoMes: this.state.mediaConsumoMes,
+      taxaPerda: this.state.taxaPerda,
+    };
+
+    const potencia_sistema = Calculos.potencia_sistema(
+      valCalculos.mediaConsumoMes,
+      this.props.route.params.media,
+      valCalculos.taxaPerda
+    );
+    const num_modulos = Calculos.num_modulos(
+      potencia_sistema,
+      valCalculos.potencia
+    );
+
+    const potencia_instalada = Calculos.potencia_instalada(
+      num_modulos,
+      valCalculos.potencia
+    );
+
+    this.setState({
+      calculoPotenciaInstalada: potencia_instalada.toFixed(2),
+      numeroModulos: num_modulos,
+      calculoPotenciaSistema: potencia_sistema.toFixed(2)
+    });
     this.openModalCalculo(true);
   }
 
   _Submit() {
     alert("Gera Pdf Dus Guri");
   }
-  
+
   listModulos = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
@@ -189,31 +206,6 @@ export default class formConfOrcamento extends Component {
       );
     });
   };
-
-  potencia_sistema = () => {
-    const valor = Calculos.potencia_sistema(
-      this.state.mediaConsumoMes,
-      5,
-      this.state.taxaPerda
-    );
-    this.setState({ calculoPotenciaSistema: valor });
-
-  };
-
-  num_modulo = (potencia) => {
-    const valor = Calculos.num_modulos(this.state.calculoPotenciaSistema, potencia);
-    this.setState({ numeroModulos: valor });
-    this.potencia_instalada(valor, potencia)
-  };
-
-  potencia_instalada = (numModulo, potencia) => {
-    const valor = Calculos.potencia_instalada(
-      numModulo,
-      potencia
-    );
-    this.setState({ calculoPotenciaInstalada: valor });
-  };
-
   render() {
     return (
       <View style={Style.container}>
@@ -287,7 +279,7 @@ export default class formConfOrcamento extends Component {
                   value={String(this.state.potencia)}
                 />
               </View>
-            </View>           
+            </View>
 
             <View style={{ alignItems: "flex-end" }}>
               <TouchableOpacity
@@ -299,12 +291,11 @@ export default class formConfOrcamento extends Component {
                 <View style={{ alignItems: "center" }}>
                   <Image
                     source={require("../../../assets/calc.png")}
-                    style={{ width: 30, height: 30 }}
+                    style={{ width: 30, height: 35 }}
                   />
                 </View>
               </TouchableOpacity>
             </View>
-
           </View>
         </ScrollView>
 
@@ -321,13 +312,12 @@ export default class formConfOrcamento extends Component {
           mensagem={this.state.mensagem}
           open={this.state.openCalculo}
           execute={this.openModalCalculo}
-          numeroModulos={0}
-          calculoPotenciaSistema={0}
-          calculoPotenciaInstalada={0}
+          numeroModulos={this.state.numeroModulos}
+          calculoPotenciaSistema={this.state.calculoPotenciaSistema}
+          calculoPotenciaInstalada={this.state.calculoPotenciaInstalada}
           valorFinal={0}
           valorKW={0}
         />
-
       </View>
     );
   }
