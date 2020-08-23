@@ -29,8 +29,8 @@ export default class formConfOrcamento extends Component {
       tarifas: [],
       tarifa: 0,
       calculo_kwp: [{
-        'TELHADO':0,
-        'SOLO':0
+        'TELHADO': 0,
+        'SOLO': 0
       }],
 
       disjuntorSel: "",
@@ -166,7 +166,7 @@ export default class formConfOrcamento extends Component {
         num_modulos,
         valCalculos.potencia
       );
-    await db.transaction((tx) => {
+      await db.transaction((tx) => {
         tx.executeSql(
           "SELECT * FROM calculo_kwp where POTEN2 > (?) AND POTEN1 < (?) AND codPadrao = (?)",
           [
@@ -198,13 +198,22 @@ export default class formConfOrcamento extends Component {
   _geToMessage(orcamentoConfig) {
     if (orcamentoConfig.tipoRedeSel < 1) return "Selecione o Tipo de Rede";
     if (orcamentoConfig.disjuntorSel < 1) return "Selecione o Disjuntor";
-    if (orcamentoConfig.instalacaoSel < 1)
-      return "Selecione o Tipo de instalação";
-    if (!orcamentoConfig.mediaConsumoMes)
+    if (orcamentoConfig.instalacaoSel < 1) return "Selecione o Tipo de instalação";
+
+    if (!orcamentoConfig.mediaConsumoMes) {
       return "Informe a Média de Consumo Mês";
+    } else if (orcamentoConfig.mediaConsumoMes <= 0) {
+      return "A Média de Consumo Mês deve ser maior que zero"
+    }
+    
+    if (!orcamentoConfig.taxaPerda) {
+      return "Informe a taxa Perda";
+    } else if (orcamentoConfig.taxaPerda <= 0) {
+      return "A Taxa de Perda deve ser maior que zero";
+    }
+
     if (orcamentoConfig.moduloSel < 1) return "Selecione o Módulo";
     if (orcamentoConfig.tarifaSel <= 0) return "Selecione a Tarifa";
-    if (!orcamentoConfig.taxaPerda) return "Informe a taxa Perda";
   }
 
   _onValidaFom = () => {
@@ -225,7 +234,9 @@ export default class formConfOrcamento extends Component {
       !orcamentoConfig.mediaConsumoMes ||
       orcamentoConfig.moduloSel < 1 ||
       orcamentoConfig.tarifaSel <= 0 ||
-      !orcamentoConfig.taxaPerda
+      !orcamentoConfig.taxaPerda ||
+      Number(orcamentoConfig.mediaConsumoMes <=0) ||
+      Number(orcamentoConfig.taxaPerda <=0 )
     ) {
       const msg = this._geToMessage(orcamentoConfig);
       this.setState({ mensagem: msg });

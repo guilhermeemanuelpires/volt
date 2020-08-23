@@ -460,6 +460,7 @@ export default class FormDatabase extends React.Component {
 
           <InputPattern
             value={this.state.ip}
+            mask='NOT-VIRGULA'
             handleClick={this.setIp}
             keyboardType="numeric"
           />
@@ -480,7 +481,7 @@ export default class FormDatabase extends React.Component {
         </TouchableOpacity>
 
         <MsgModal
-          mensagem={this.state.mensagem}
+          mensagem={this.state.mensagem}          
           open={this.state.open}
           execute={this.openModal}
         />
