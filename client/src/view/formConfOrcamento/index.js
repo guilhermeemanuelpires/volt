@@ -28,6 +28,10 @@ export default class formConfOrcamento extends Component {
       tarifaSel: "",
       tarifas: [],
       tarifa: 0,
+      calculo_kwp: [{
+        'TELHADO':0,
+        'SOLO':0
+      }],
 
       disjuntorSel: "",
       disjuntores: [],
@@ -49,7 +53,7 @@ export default class formConfOrcamento extends Component {
       valorKW: "",
       openCalculo: false,
       mensagem: "",
-      open: false
+      open: false,
     };
     this.listTipo_Rede();
     this.listTarifas();
@@ -73,7 +77,8 @@ export default class formConfOrcamento extends Component {
         return tipoRede;
       }
     });
-    this.setState({ tipoRedeID: tipoRede.id })
+    this.setState({ tipoRedeID: tipoRede.id });
+    this.listDisjuntores();
   };
 
   setDisjuntorSel = (disjuntorSel) => {
@@ -97,7 +102,7 @@ export default class formConfOrcamento extends Component {
         return instalacao;
       }
     });
-    this.setState({ instalacaoDesc: instalacao.descricao })
+    this.setState({ instalacaoDesc: instalacao.descricao });
   };
 
   setModuloSel = (moduloSel) => {
@@ -138,7 +143,8 @@ export default class formConfOrcamento extends Component {
     this.setState({ open });
   };
 
-  _Calculos() {
+  _Calculos = async () => {
+
     if (this._onValidaFom()) {
       const valCalculos = {
         potencia: this.state.potencia,
@@ -160,27 +166,48 @@ export default class formConfOrcamento extends Component {
         num_modulos,
         valCalculos.potencia
       );
+    await db.transaction((tx) => {
+        tx.executeSql(
+          "SELECT * FROM calculo_kwp where POTEN2 > (?) AND POTEN1 < (?) AND codPadrao = (?)",
+          [
+            potencia_instalada,
+            potencia_instalada,
+            this.state.tipoRedeID,
+          ],
+          (trans, result) => {
+            this.setState({ calculo_kwp: result["rows"]._array });
+            const val = this.state.calculo_kwp[0];
+            const desc = this.state.instalacaoDesc;
+            var valorFinal = this.state.calculoPotenciaInstalada * val[desc];
+            var valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
+            this.setState({ valorFinal: valorFinal });
+            this.setState({ valorKW: valorKW_R });
+          }
+        );
+      });
       this.setState({
         calculoPotenciaInstalada: potencia_instalada.toFixed(2),
         numeroModulos: num_modulos,
-        calculoPotenciaSistema: potencia_sistema.toFixed(2)
+        calculoPotenciaSistema: potencia_sistema.toFixed(2),
       });
+
       this.openModalCalculo(true);
-    };
-  }
+    }
+  };
 
   _geToMessage(orcamentoConfig) {
-    if (orcamentoConfig.tipoRedeSel <= 1) return "Selecione o Tipo de Rede";
-    if (orcamentoConfig.disjuntorSel <= 1) return "Selecione o Disjuntor";
-    if (orcamentoConfig.instalacaoSel <= 1) return "Selecione o Tipo de instalação"
-    if (!orcamentoConfig.mediaConsumoMes) return "Informe a Média de Consumo Mês";
-    if (orcamentoConfig.moduloSel <= 1) return "Selecione o Módulo";
+    if (orcamentoConfig.tipoRedeSel < 1) return "Selecione o Tipo de Rede";
+    if (orcamentoConfig.disjuntorSel < 1) return "Selecione o Disjuntor";
+    if (orcamentoConfig.instalacaoSel < 1)
+      return "Selecione o Tipo de instalação";
+    if (!orcamentoConfig.mediaConsumoMes)
+      return "Informe a Média de Consumo Mês";
+    if (orcamentoConfig.moduloSel < 1) return "Selecione o Módulo";
     if (orcamentoConfig.tarifaSel <= 0) return "Selecione a Tarifa";
-    if (!orcamentoConfig.taxaPerda) return "Informe a Taxa de Perda";
+    if (!orcamentoConfig.taxaPerda) return "Informe a taxa Perda";
   }
 
   _onValidaFom = () => {
-
     const orcamentoConfig = {
       tipoRedeSel: this.state.tipoRedeSel,
       disjuntorSel: this.state.disjuntorSel,
@@ -188,16 +215,17 @@ export default class formConfOrcamento extends Component {
       mediaConsumoMes: this.state.mediaConsumoMes,
       taxaPerda: this.state.taxaPerda,
       tarifaSel: this.state.tarifaSel,
-      moduloSel: this.state.moduloSel
-    }
+      moduloSel: this.state.moduloSel,
+    };
 
-    if ((orcamentoConfig.tipoRedeSel <= 1) ||
-      (orcamentoConfig.disjuntorSel <= 1) ||
-      (orcamentoConfig.instalacaoSel <= 1) ||
-      (!orcamentoConfig.mediaConsumoMes) ||
-      (orcamentoConfig.moduloSel <= 1) ||
-      (orcamentoConfig.tarifaSel <= 0) ||
-      (!orcamentoConfig.taxaPerda)
+    if (
+      orcamentoConfig.tipoRedeSel < 1 ||
+      orcamentoConfig.disjuntorSel < 1 ||
+      orcamentoConfig.instalacaoSel < 1 ||
+      !orcamentoConfig.mediaConsumoMes ||
+      orcamentoConfig.moduloSel < 1 ||
+      orcamentoConfig.tarifaSel <= 0 ||
+      !orcamentoConfig.taxaPerda
     ) {
       const msg = this._geToMessage(orcamentoConfig);
       this.setState({ mensagem: msg });
@@ -206,13 +234,12 @@ export default class formConfOrcamento extends Component {
     } else {
       return true;
     }
-
-  }
+  };
 
   _Submit() {
     if (this._onValidaFom()) {
       alert("Gera Pdf Dus Guri");
-    };
+    }
   }
 
   listModulos = async () => {
@@ -250,8 +277,8 @@ export default class formConfOrcamento extends Component {
   listDisjuntores = async () => {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT id, descricao, demanda, amper, codPadrao FROM disj_entrada",
-        [],
+        "SELECT id, descricao, demanda, amper, codPadrao FROM disj_entrada WHERE codPadrao = (?)",
+        [this.state.tipoRedeID],
         (trans, result) => {
           this.setState({ disjuntores: result["rows"]._array });
         }
@@ -380,8 +407,8 @@ export default class formConfOrcamento extends Component {
           numeroModulos={this.state.numeroModulos}
           calculoPotenciaSistema={this.state.calculoPotenciaSistema}
           calculoPotenciaInstalada={this.state.calculoPotenciaInstalada}
-          valorFinal={0}
-          valorKW={0}
+          valorFinal={this.state.valorFinal}
+          valorKW={this.state.valorKW}
         />
 
         <MsgModal
@@ -389,7 +416,6 @@ export default class formConfOrcamento extends Component {
           open={this.state.open}
           execute={this.openModal}
         />
-
       </View>
     );
   }

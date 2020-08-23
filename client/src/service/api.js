@@ -75,6 +75,17 @@ async function getTipoInstall(ip) {
   }
 }
 
+async function getCalculoKWP(ip) {
+  try {
+    const api = "http://" + ip + ":3000/calculoKWP";
+    const response = await fetch(api);
+    const responseJson = await response.json();
+    return responseJson["CalculoKWP"];
+  } catch (error) {
+    return "Error";
+  }
+}
+
 const listar = {
   getModulo,
   getCidade,
@@ -83,6 +94,7 @@ const listar = {
   getTipoRede,
   getDisjuntor,
   getTipoInstall,
+  getCalculoKWP,
 };
 
 export default listar;
