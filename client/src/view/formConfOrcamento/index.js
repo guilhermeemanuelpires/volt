@@ -139,7 +139,7 @@ export default class formConfOrcamento extends Component {
   };
 
   _Calculos() {
-    if (this._onValidaFom()) {      
+    if (this._onValidaFom()) {
       const valCalculos = {
         potencia: this.state.potencia,
         mediaConsumoMes: this.state.mediaConsumoMes,
@@ -174,12 +174,12 @@ export default class formConfOrcamento extends Component {
     if (orcamentoConfig.disjuntorSel <= 1) return "Selecione o Disjuntor";
     if (orcamentoConfig.instalacaoSel <= 1) return "Selecione o Tipo de instalação"
     if (!orcamentoConfig.mediaConsumoMes) return "Informe a Média de Consumo Mês";
-    if (orcamentoConfig.moduloSel <= 1) return "Informe a Taxa de Perda";
+    if (orcamentoConfig.moduloSel <= 1) return "Selecione o Módulo";
     if (orcamentoConfig.tarifaSel <= 0) return "Selecione a Tarifa";
-    if (!orcamentoConfig.taxaPerda) return "Selecione o Módulo";
+    if (!orcamentoConfig.taxaPerda) return "Informe a Taxa de Perda";
   }
 
-  _onValidaFom = () => {    
+  _onValidaFom = () => {
 
     const orcamentoConfig = {
       tipoRedeSel: this.state.tipoRedeSel,
@@ -304,13 +304,14 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Média de Consumo Mês</Text>
             <InputPattern
               keyboardType="numeric"
-              mask='NUMERICO'
+              mask='NOT-VIRGULA'
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
             <Text style={Style.alinhaLabel}>Taxa Perda</Text>
             <InputPattern
-              keyboardType="numeric"              
+              keyboardType="numeric"
+              mask='NOT-VIRGULA'
               value={this.state.taxaPerda}
               handleClick={this.setTaxaPerda}
             />

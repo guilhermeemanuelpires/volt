@@ -4,6 +4,7 @@ import {
 } from "react-native";
 
 import Style from "../../styles/styles";
+import Mask from "../../../util/mask";
 
 export default class InputPattern extends Component {
 
@@ -25,19 +26,19 @@ export default class InputPattern extends Component {
 
         if (this.props.hasOwnProperty('mask')) {
             if (this.props.mask == 'CNPJF') {
-                result = cpfMask(result);
+                result = Mask.cpfMask(result);
             }
 
             if (this.props.mask == 'FONE') {
-                result = foneMask(result);
+                result = Mask.foneMask(result);
             }
 
             if (this.props.mask == 'CEP') {
-                result = cepMask(result);
+                result = Mask.cepMask(result);
             }
 
-            if (this.props.mask == 'NUMERICO') {
-                result = numericoMask(result);
+            if (this.props.mask == 'NOT-VIRGULA') {
+                result = Mask.notVirgula(result);
             }
         }
 
@@ -59,68 +60,4 @@ export default class InputPattern extends Component {
             />
         );
     }
-}
-
-//CPF
-const cpfMask = value => {
-    const calc = value;
-
-    if (calc.length <= 15) {
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    } else {
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{2})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})/, '$1/$2')
-            .replace(/(\d{4})(\d{1,2})/, '$1-$2')
-            .replace(/(-\d{2})\d+?$/, '$1')
-    }
-}
-
-//TELEFONE
-const foneMask = value => {
-
-    const calc = value;
-    if (calc.length <= 14) {
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{0})(\d)/, '$1($2')
-            .replace(/(\d{2})(\d)/, '$1) $2')
-            .replace(/(\d{4})(\d)/, '$1-$2')
-    } else {
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{0})(\d)/, '$1($2')
-            .replace(/(\d{2})(\d)/, '$1) $2')
-            .replace(/(\d{5})(\d)/, '$1-$2')
-    }
-
-}
-
-//CEP
-const cepMask = value => {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1-$2')
-        .replace(/(-\d{3})\d+?$/, '$1')
-}
-
-//NUMERICO
-const numericoMask = v => {
-    v = v.replace(/\D/g, "");
-    var len = v.length;
-    for (var i = 3; i < v.length; i = i + 3) {
-        if (len > i) {
-            var x = len - i
-                , er = new RegExp('(\\d{' + x + '})(\\d)');
-            v = v.replace(er, '$1.$2');
-        }
-    }
-    return v;
 }
