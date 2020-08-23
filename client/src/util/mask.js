@@ -50,7 +50,7 @@ const cepMask = value => {
 
 //Moeda BR
 function moedaMask(value) {
-    return Number(value).toFixed(2).replace(".", ",").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return Number(value).toFixed(2).replace(".", ",").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 }
 
 // Substituir virgula por ponto
