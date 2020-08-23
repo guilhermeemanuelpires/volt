@@ -5,7 +5,11 @@ import { CalculoKWPEntity } from "../entity/calculoKWP.entity";
 class CalculoKWPController {
   public async CalculoKWP(req: Request, res: Response) {
     try {
-      const CalculoKWP = await getRepository(CalculoKWPEntity).find();
+      const CalculoKWP = await getRepository(CalculoKWPEntity).find(
+        {
+          relations: ["cod_padrao"]
+        });
+
       return res.status(200).send({ CalculoKWP });
     } catch (error) {
       res.status(500).send(error);
