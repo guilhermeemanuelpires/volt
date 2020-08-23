@@ -8,8 +8,9 @@ import {
     TextInput
 } from "react-native";
 
-import Style from "../../styles/styles"
-import styles from "./styles"
+import Mask from "../../../util/mask";
+import Style from "../../styles/styles";
+import styles from "./styles";
 
 export default class MsgModal extends Component {
 
@@ -59,11 +60,11 @@ export default class MsgModal extends Component {
                                 }}
                             >
                                 <View style={{ flex: 0.6 }}>
-                                    <Text style={Style.alinhaLabel}>Valor Final</Text>
+                                    <Text style={Style.alinhaLabel}>Valor Final R$</Text>
                                     <TextInput
                                         style={Style.input}
                                         editable={false}
-                                        value={String(this.props.valorFinal)}
+                                        value={Mask.moedaMask(String(this.props.valorFinal))}
                                     />
                                 </View>
                                 <View style={{ flex: 0.6 }}>
@@ -71,11 +72,11 @@ export default class MsgModal extends Component {
                                     <TextInput
                                         style={Style.input}
                                         editable={false}
-                                        value={String(this.props.valorKW)}
+                                        value={Mask.moedaMask(String(this.props.valorKW))}
                                     />
                                 </View>
                             </View>
-                        </View>            
+                        </View>
 
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
@@ -84,7 +85,7 @@ export default class MsgModal extends Component {
                             }}
                         >
                             <Text style={styles.textStyle}>Voltar</Text>
-                        </TouchableOpacity>                      
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>

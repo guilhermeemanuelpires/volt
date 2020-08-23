@@ -144,6 +144,7 @@ export default class formConfOrcamento extends Component {
   };
 
   _Calculos = async () => {
+
     if (this._onValidaFom()) {
       const valCalculos = {
         potencia: this.state.potencia,
@@ -330,12 +331,14 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Média de Consumo Mês</Text>
             <InputPattern
               keyboardType="numeric"
+              mask='NOT-VIRGULA'
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
             <Text style={Style.alinhaLabel}>Taxa Perda</Text>
             <InputPattern
               keyboardType="numeric"
+              mask='NOT-VIRGULA'
               value={this.state.taxaPerda}
               handleClick={this.setTaxaPerda}
             />
