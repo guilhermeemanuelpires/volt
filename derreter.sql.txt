@@ -1,0 +1,17 @@
+delete from calculo_kwp;
+delete from cidade;
+delete from cidade_media;
+delete from disj_entrada;
+delete from modulo;
+delete from padroes_entrada;
+delete from  tarifas;
+delete from tipo_instalacao;
+
+ALTER TABLE calculo_kwp AUTO_INCREMENT=1;
+ALTER TABLE cidade AUTO_INCREMENT=1;
+ALTER TABLE cidade_media AUTO_INCREMENT=1;
+ALTER TABLE disj_entrada AUTO_INCREMENT=1;
+ALTER TABLE modulo AUTO_INCREMENT=1;
+ALTER TABLE  padroes_entrada AUTO_INCREMENT=1;
+ALTER TABLE  tarifas AUTO_INCREMENT=1;
+ALTER TABLE  tipo_instalacao AUTO_INCREMENT=1;
