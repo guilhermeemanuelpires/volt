@@ -89,10 +89,10 @@ export default styles = StyleSheet.create({
             width: 0,
             height: 6,
         },
-        shadowOpacity: 0.37,
-        shadowRadius: 7.49,
+        shadowOpacity: 0.4,
+        shadowRadius: 50,
 
-        elevation: 12,
+        elevation: 4,
     },
     botaoDisabled: {
         margin: 10,
