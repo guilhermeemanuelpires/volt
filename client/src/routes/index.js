@@ -5,6 +5,7 @@ import {
 import { Button, Image, TouchableOpacity } from "react-native";
 import FormCli from "../view/formCliente/index";
 import formConfOrcamento from "../view/formConfOrcamento/index";
+import pdf from "../AppContainer";
 import MainRoutes from "./Main.routes";
 import React from "react";
 import { DrawerActions } from "@react-navigation/native";
@@ -15,23 +16,22 @@ export default function Routes() {
   return (
     <Stack.Navigator
       initialRouteName="FormCli"
-        screenOptions={{
+      screenOptions={{
         headerStyle: {
           backgroundColor: "#0A7ABF",
         },
         headerTintColor: "#ffff",
       }}
-    >   
+    >
       <Stack.Screen
         name="FormCli"
         component={MainRoutes}
         options={({ navigation }) => ({
           title: "Volt Orçamento",
           headerLeft: () => (
-            <TouchableOpacity          
-            onPress={() =>
-              navigation.dispatch(DrawerActions.toggleDrawer())
-            }>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+            >
               <Image
                 source={require("../../assets/menu.png")}
                 style={{ width: 50, height: 50 }}
@@ -52,9 +52,17 @@ export default function Routes() {
         component={formConfOrcamento}
         options={({ navigation }) => ({
           title: "Volt Orçamento",
-          backgroundColor: "#0A7ABF"
+          backgroundColor: "#0A7ABF",
         })}
-      />      
+      />
+      <Stack.Screen
+        name="pdf"
+        component={pdf}
+        options={({ navigation }) => ({
+          title: "Volt Orçamento",
+          backgroundColor: "#0A7ABF",
+        })}
+      />
     </Stack.Navigator>
   );
 }
