@@ -16,6 +16,7 @@ import Calculos from "../../util/index";
 import Style from "../styles/styles";
 
 var db = null;
+
 export default class formConfOrcamento extends Component {
   constructor(props) {
     db = DatabaseConnection.getConnection();
@@ -28,10 +29,12 @@ export default class formConfOrcamento extends Component {
       tarifaSel: "",
       tarifas: [],
       tarifa: 0,
-      calculo_kwp: [{
-        'TELHADO':0,
-        'SOLO':0
-      }],
+      calculo_kwp: [
+        {
+          TELHADO: 0,
+          SOLO: 0,
+        },
+      ],
 
       disjuntorSel: "",
       disjuntores: [],
@@ -42,6 +45,12 @@ export default class formConfOrcamento extends Component {
 
       mediaConsumoMes: "",
       taxaPerda: "",
+      geracaoEstimadaMensal: 0,
+      contaSemVolt: 0,
+      coluna1: 0,
+      contaComVolt: 0,
+      economia: 0,
+      investimento: 0,
 
       moduloSel: "",
       modulos: [],
@@ -143,13 +152,13 @@ export default class formConfOrcamento extends Component {
     this.setState({ open });
   };
 
-  _Calculos = async () => {
-
+  _Calculos = async (modal) => {
     if (this._onValidaFom()) {
       const valCalculos = {
         potencia: this.state.potencia,
         mediaConsumoMes: this.state.mediaConsumoMes,
         taxaPerda: this.state.taxaPerda,
+        tarifa: this.state.tarifa,
       };
 
       const potencia_sistema = Calculos.potencia_sistema(
@@ -166,32 +175,76 @@ export default class formConfOrcamento extends Component {
         num_modulos,
         valCalculos.potencia
       );
-    await db.transaction((tx) => {
+
+      const geracao_estimada = Calculos.geracao_estimada(
+        potencia_instalada,
+        this.props.route.params.media
+      );
+      const luz_sem_volt = Calculos.luz_sem_volt(
+        valCalculos.mediaConsumoMes,
+        valCalculos.tarifa
+      );
+      await db.transaction((tx) => {
         tx.executeSql(
           "SELECT * FROM calculo_kwp where POTEN2 > (?) AND POTEN1 < (?) AND codPadrao = (?)",
-          [
-            potencia_instalada,
-            potencia_instalada,
-            this.state.tipoRedeID,
-          ],
+          [potencia_instalada, potencia_instalada, this.state.tipoRedeID],
           (trans, result) => {
             this.setState({ calculo_kwp: result["rows"]._array });
-            const val = this.state.calculo_kwp[0];
-            const desc = this.state.instalacaoDesc;
-            var valorFinal = this.state.calculoPotenciaInstalada * val[desc];
-            var valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
-            this.setState({ valorFinal: valorFinal });
-            this.setState({ valorKW: valorKW_R });
+            console.log(this.state.calculo_kwp.length)
+            var val = 0
+            var desc = 'SOLO'
+            var valorFinal = 0
+            var valorKW_R = 0
+            if(this.state.calculo_kwp.length > 0){
+               val = this.state.calculo_kwp[0];
+               desc = this.state.instalacaoDesc;
+               valorFinal = this.state.calculoPotenciaInstalada * val[desc];
+               valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
+            }
+
+            const investimento_proposto = Calculos.investimento(
+              num_modulos,
+              val[desc]
+            );
+            this.setState({
+              valorFinal: valorFinal,
+              valorKW: valorKW_R,
+              investimento: investimento_proposto,
+            });
           }
         );
       });
+      await db.transaction((tx) => {
+        tx.executeSql(
+          "SELECT coluna1 FROM padroes_entrada where id = (?)",
+          [this.state.tipoRedeID],
+          (trans, result) => {
+            this.setState({ coluna1: result["rows"]._array });
+            const luz_com_volt = Calculos.luz_com_volt(
+              geracao_estimada,
+              valCalculos.mediaConsumoMes,
+              this.state.coluna1[0].coluna1,
+              valCalculos.tarifa
+            );
+            const economia_com_volt = Calculos.economia(
+              this.state.contaSemVolt,
+              luz_com_volt
+            );
+            this.setState({
+              contaComVolt: luz_com_volt.toFixed(2),
+              economia: economia_com_volt.toFixed(2),
+            });
+          }
+        );
+      })
       this.setState({
         calculoPotenciaInstalada: potencia_instalada.toFixed(2),
         numeroModulos: num_modulos,
         calculoPotenciaSistema: potencia_sistema.toFixed(2),
+        geracaoEstimadaMensal: geracao_estimada.toFixed(2),
+        contaSemVolt: luz_sem_volt.toFixed(2),
       });
-
-      this.openModalCalculo(true);
+      this.openModalCalculo(modal);
     }
   };
 
@@ -236,9 +289,19 @@ export default class formConfOrcamento extends Component {
     }
   };
 
-  _Submit() {
+  async _Submit (){
     if (this._onValidaFom()) {
-      alert("Gera Pdf Dus Guri");
+     await this._Calculos(false)
+      this.props.navigation.navigate("pdf", {
+        nomeCli: this.props.route.params.nomeCli,
+        potencia_instalada: this.state.calculoPotenciaInstalada,
+        mediaConsumoMes: this.state.mediaConsumoMes,
+        geracaoEstimadaMensal: this.state.geracaoEstimadaMensal,
+        contaSemVolt: this.state.contaSemVolt,
+        contaComVolt: this.state.contaComVolt,
+        economia: this.state.economia,
+        investimento: this.state.investimento
+      });
     }
   }
 
@@ -331,14 +394,14 @@ export default class formConfOrcamento extends Component {
             <Text style={Style.alinhaLabel}>Média de Consumo Mês</Text>
             <InputPattern
               keyboardType="numeric"
-              mask='NOT-VIRGULA'
+              mask="NOT-VIRGULA"
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
             <Text style={Style.alinhaLabel}>Taxa Perda</Text>
             <InputPattern
               keyboardType="numeric"
-              mask='NOT-VIRGULA'
+              mask="NOT-VIRGULA"
               value={this.state.taxaPerda}
               handleClick={this.setTaxaPerda}
             />
@@ -378,7 +441,7 @@ export default class formConfOrcamento extends Component {
               <TouchableOpacity
                 style={Style.botaoCalc}
                 onPress={() => {
-                  this._Calculos();
+                  this._Calculos(true);
                 }}
               >
                 <View style={{ alignItems: "center" }}>
