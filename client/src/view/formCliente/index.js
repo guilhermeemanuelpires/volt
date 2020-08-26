@@ -112,7 +112,7 @@ export default class FormCli extends Component {
       this.setState({ mensagem: msg });
       this.openModal(true);
     } else {
-      this.props.navigation.navigate('formConfOrcamento', {media: this.state.cidadeSel, nomeCli: this.state.nome})
+      this.props.navigation.navigate('formConfOrcamento', {media: this.state.cidadeSel, nomeCli: this.state.nome, cidade: this.state.cidadeDesc})
     }
   };
 

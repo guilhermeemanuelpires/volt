@@ -34,7 +34,7 @@ export default function Button({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#0A7ABF",
+    backgroundColor: "#11BF4E",
     paddingHorizontal: 20,
     paddingVertical: 10,
     alignItems: "center",

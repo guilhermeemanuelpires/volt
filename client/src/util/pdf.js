@@ -17,7 +17,7 @@ export const createHTML = ({
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Exemplo PDF</title>
+            <title>Orçamento</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&display=swap');
 

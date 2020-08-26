@@ -190,10 +190,18 @@ export default class formConfOrcamento extends Component {
           [potencia_instalada, potencia_instalada, this.state.tipoRedeID],
           (trans, result) => {
             this.setState({ calculo_kwp: result["rows"]._array });
-            const val = this.state.calculo_kwp[0];
-            const desc = this.state.instalacaoDesc;
-            var valorFinal = this.state.calculoPotenciaInstalada * val[desc];
-            var valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
+            console.log(this.state.calculo_kwp.length)
+            var val = 0
+            var desc = 'SOLO'
+            var valorFinal = 0
+            var valorKW_R = 0
+            if(this.state.calculo_kwp.length > 0){
+               val = this.state.calculo_kwp[0];
+               desc = this.state.instalacaoDesc;
+               valorFinal = this.state.calculoPotenciaInstalada * val[desc];
+               valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
+            }
+
             const investimento_proposto = Calculos.investimento(
               num_modulos,
               val[desc]
