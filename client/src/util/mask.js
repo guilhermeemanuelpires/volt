@@ -58,12 +58,18 @@ function notVirgula(value) {
     return value.replace(/,/g, '.');
 }
 
+// Substituir ponto por vircula
+function notPonto(value) {
+    return value.replace(".", ",")
+}
+
 const Mask = {
     cpfMask,
     moedaMask,
     notVirgula,
     foneMask,
-    cepMask
+    cepMask,
+    notPonto
 }
 
 export default Mask;
