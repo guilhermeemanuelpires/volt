@@ -41,8 +41,8 @@ export const createHTML = ({
                 }
 
                 @page {
-                    ${ sholudRemovePageMargin ? "margin: 0;" : ""}
-                    background: red;
+                  margin: 1;
+                
                 }
                 .img-fluid {
                     width: 100%;

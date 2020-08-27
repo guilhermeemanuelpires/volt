@@ -11,6 +11,7 @@ import Dropdow from "../components/dropdown/index";
 import ModalCalculo from "../components/modalCalc/index";
 import MsgModal from "../components/modal/index";
 import InputPattern from "../components/InputPattern/index";
+import Mask from "../../util/mask";
 import { DatabaseConnection } from "../../database/connection";
 import Calculos from "../../util/index";
 import Style from "../styles/styles";
@@ -206,7 +207,7 @@ export default class formConfOrcamento extends Component {
             this.setState({
               valorFinal: valorFinal,
               valorKW: valorKW_R,
-              investimento: investimento_proposto,
+              investimento: investimento_proposto.toFixed(2),
             });
           }
         );
@@ -302,13 +303,13 @@ export default class formConfOrcamento extends Component {
      await this._Calculos(false)
       this.props.navigation.navigate("pdf", {
         nomeCli: this.props.route.params.nomeCli,
-        potencia_instalada: this.state.calculoPotenciaInstalada,
+        potencia_instalada: Mask.notPonto(this.state.calculoPotenciaInstalada),
         mediaConsumoMes: this.state.mediaConsumoMes,
-        geracaoEstimadaMensal: this.state.geracaoEstimadaMensal,
-        contaSemVolt: this.state.contaSemVolt,
-        contaComVolt: this.state.contaComVolt,
-        economia: this.state.economia,
-        investimento: this.state.investimento
+        geracaoEstimadaMensal: Mask.notPonto(this.state.geracaoEstimadaMensal),
+        contaSemVolt: Mask.moedaMask(this.state.contaSemVolt),
+        contaComVolt: Mask.moedaMask(this.state.contaComVolt),
+        economia: Mask.moedaMask(this.state.economia),
+        investimento: Mask.moedaMask(this.state.investimento)
       });
     }
   }
