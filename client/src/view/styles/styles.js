@@ -94,6 +94,24 @@ export default styles = StyleSheet.create({
 
         elevation: 4,
     },
+    botaoQR: {        
+        margin: 10,
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+        justifyContent: 'center',
+        backgroundColor: '#51ACFF',
+        shadowColor: "#000",
+
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 50,
+
+        elevation: 4,
+    },
     botaoDisabled: {
         margin: 10,
         height: 50,

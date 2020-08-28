@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Image,
+} from "react-native";
 import InputPattern from "../components/InputPattern/index";
-import ModalIP from "../components/modal/modalIp";
+import ModalIP from "../components/modalIP/modalIp";
 import MsgModal from "../components/modal/index";
 import { DatabaseConnection } from "../../database/connection";
 import listar from "../../service/api";
@@ -9,10 +16,11 @@ import Style from "../styles/styles";
 import StyleIp from "./styles";
 
 var db = null;
-export default class FormDatabase extends React.Component {
+export default class FormDatabase extends Component {
   constructor(props) {
     super(props);
     db = DatabaseConnection.getConnection();
+
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS modulo " +
@@ -64,13 +72,26 @@ export default class FormDatabase extends React.Component {
       tipoInstall: [],
       Disjuntores: [],
       CalculoKWP: [],
-      erro: false,
+      erro: "Correto",
       open: false,
       mensagem: "",
       openIP: false,
       mensagemIP: "Atualizando Tabela X",
       tipoIcone: "loading",
     };
+  }
+
+  componentDidMount() {
+    if (this.props.route.params) {
+      const array = this.props.route.params.ip.split("/");
+      if (array[0] == "volt") {
+        this.setState({ ip: array[1] });
+        this.atualizacao(array[1]);
+      } else {
+        alert("QRCODE Inválido!!");
+        this.props.navigation.navigate("FormCli");
+      }
+    }
   }
 
   setIp = (ip) => {
@@ -80,12 +101,13 @@ export default class FormDatabase extends React.Component {
   openModal = (open) => {
     this.setState({ open });
   };
+  openModalIP = (openIP) => {
+    this.setState({ openIP });
+  };
 
   newModulos = async (data) => {
-    const modulos = await listar.getModulo(data);
-    if (modulos == "Error") {
-      this.setState({erro: true})
-    } else {
+    try {
+      const modulos = await listar.getModulo(data);
       this.setState({ modulos });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM modulo");
@@ -142,14 +164,14 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    } catch (error) {
+      throw "PIPOCOU";
     }
   };
-  newCidades = async () => {
-    const cidades = await listar.getCidade(this.state.ip);
-    const medias = await listar.getMedia(this.state.ip);
-    if (cidades == "Error" || medias == "Error") {
-      this.setState({erro: true})
-    } else {
+  newCidades = async (data) => {
+    try {
+    const cidades = await listar.getCidade(data);
+    const medias = await listar.getMedia(data);
       this.setState({ cidades, medias });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM cidade");
@@ -175,14 +197,14 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
 
-  newTarifas = async () => {
-    const tarifas = await listar.getTarifa(this.state.ip);
-    if (tarifas == "Error") {
-      this.setState({erro: true})
-    } else {
+  newTarifas = async (data) => {
+    try{
+    const tarifas = await listar.getTarifa(data);
       this.setState({ tarifas });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tarifa");
@@ -201,21 +223,21 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
 
   newPadroes_Entrada = async () => {
+    try{
     const tipoRede = await listar.getTipoRede(this.state.ip);
-    if (tipoRede == "Error") {
-      this.setState({erro: true})
-    } else {
       this.setState({ tipoRede });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM padroes_entrada");
         tx.executeSql(
           "INSERT INTO padroes_entrada (id, descricao, minimo, coluna1, solo)" +
             "values (?, ?, ?, ?, ?)",
-          [0 ,"Selecione", 0, 0, 0],
+          [0, "Selecione", 0, 0, 0],
           (txObj, resultSet) =>
             this.setState({
               data: this.state.data.concat({
@@ -253,14 +275,14 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
 
-  newDisjuntores = async () => {
-    const Disjuntores = await listar.getDisjuntor(this.state.ip);
-    if (Disjuntores == "Error") {
-      this.setState({erro: true})
-    } else {
+  newDisjuntores = async (data) => {
+    try{
+    const Disjuntores = await listar.getDisjuntor(data);
       this.setState({ Disjuntores });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM disj_entrada");
@@ -305,13 +327,13 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
-  newTipoInstall = async () => {
-    const tipoInstall = await listar.getTipoInstall(this.state.ip);
-    if (tipoInstall == "Error") {
-      this.setState({erro: true})
-    } else {
+  newTipoInstall = async (data) => {
+    try{
+    const tipoInstall = await listar.getTipoInstall(data);
       this.setState({ tipoInstall });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tipo_instalacao");
@@ -330,7 +352,7 @@ export default class FormDatabase extends React.Component {
         for (let x = 0; x < this.state.tipoInstall.length; x++) {
           tx.executeSql(
             "INSERT INTO tipo_instalacao (id, descricao)" + "values (?, ?)",
-            [this.state.tipoInstall[x].id , this.state.tipoInstall[x].descricao],
+            [this.state.tipoInstall[x].id, this.state.tipoInstall[x].descricao],
             (txObj, resultSet) =>
               this.setState({
                 data: this.state.data.concat({
@@ -342,15 +364,15 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
-  newCalculo = async () => {
-    const CalculoKWP = await listar.getCalculoKWP(this.state.ip);
-    if (CalculoKWP == "Error") {
-      this.setState({erro: true})
-    } else {
+  newCalculo = async (data) => {
+    try{
+    const CalculoKWP = await listar.getCalculoKWP(data);
       this.setState({ CalculoKWP });
-      console.log(this.state.CalculoKWP.length)
+      console.log(this.state.CalculoKWP.length);
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM calculo_kwp");
         for (let x = 0; x < this.state.CalculoKWP.length; x++) {
@@ -380,66 +402,81 @@ export default class FormDatabase extends React.Component {
           );
         }
       });
+    }catch (error) {
+      throw "PIPOCOU";
     }
   };
+
+  atualizacao = async (data) => {
+    try {
+      const valida = await this.newModulos(data);
+      this.newCidades(data);
+      this.setState({ openIP: true });
+      this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
+      setTimeout(() => {
+        this.newModulos(data);
+        this.setState({ mensagemIP: "Atualizando Tabela Módulos" });
+        setTimeout(() => {
+          this.newTarifas(data);
+          this.setState({ mensagemIP: "Atualizando Tabela Tarifas" });
+          setTimeout(() => {
+            this.newPadroes_Entrada(data);
+            this.setState({ mensagemIP: "Atualizando Tabela Tipo de Rede" });
+            setTimeout(() => {
+              this.newDisjuntores(data);
+              this.newCalculo(data);
+              this.setState({
+                mensagemIP: "Atualizando Tabela Disjuntores Padrão",
+              });
+              setTimeout(() => {
+                this.newTipoInstall(data);
+                this.setState({
+                  mensagemIP: "Atualizando Tabela Tipo Instalação",
+                });
+                setTimeout(() => {
+                  this.setState({
+                    mensagemIP: "Concluído com Sucesso!!",
+                    tipoIcone: "sucess",
+                  });
+                  setTimeout(() => {
+                    this.setState({ openIP: false });
+                    if (this.props.route.params) {
+                      this.props.navigation.navigate("FormCli");
+                    }
+                  }, 1000);
+                }, 2000);
+              }, 4000);
+            }, 2000);
+          }, 1000);
+        }, 1000);
+      }, 20000);
+    } catch (e) {
+      this.setState({ openIP: true });
+      this.setState({ mensagemIP: "Erro ao atualizar os dados!!" });
+      this.setState({ tipoIcone: "error" });
+      setTimeout(() => {
+        this.setState({ mensagemIP: "Valide se o IP está correto!!" });
+        setTimeout(() => {
+          this.setState({
+            mensagemIP: "Verifique se o servidor está funcionando!",
+          });
+          setTimeout(() => {
+            this.setState({ mensagemIP: "Utilize o QRCODE para facilitar!!" });
+            setTimeout(() => {
+              this.props.navigation.navigate("FormCli");
+            }, 1500);
+          }, 1500);
+        }, 1500);
+      }, 1500);
+    }
+  };
+
   onValidaFom = async (data) => {
-    if (!data.ip) {
+    if (!data) {
       this.setState({ mensagem: "Informe um Ip" });
       this.openModal(true);
     } else {
-
-      setTimeout(() => {
-        this.setState({ mensagemIP: "Carregando.." });
-        this.setState({ tipoIcone: "loading" });
-        this.newModulos(data.ip);
-        this.newCidades();
-        console.log("Erro:" + this.state.erro)
-        this.setState({erro:true})
-      }, 1000);
-      if (this.state.erro) {
-        console.log("IF")
-        this.setState({ mensagemIP: "Erro na requisição" });
-        this.setState({ tipoIcone: "error" });
-        this.openModal(false);
-      } else {
-        this.newCidades();
-        this.setState({ openIP: true });
-        this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
-        setTimeout(() => {
-          this.newModulos(data.ip);
-          this.setState({ mensagemIP: "Atualizando Tabela Modulos" });
-          setTimeout(() => {
-            this.newTarifas();
-            this.setState({ mensagemIP: "Atualizando Tabela Tarifas" });
-            setTimeout(() => {
-              this.newPadroes_Entrada();
-              this.setState({ mensagemIP: "Atualizando Tabela Tipo de Rede" });
-              setTimeout(() => {
-                this.newDisjuntores();
-                this.newCalculo();
-                this.setState({
-                  mensagemIP: "Atualizando Tabela Disjuntores Padrão",
-                });
-                setTimeout(() => {
-                  this.newTipoInstall();
-                  this.setState({
-                    mensagemIP: "Atualizando Tabela Tipo Instalação",
-                  });
-                  setTimeout(() => {
-                    this.setState({
-                      mensagemIP: "Concluído com Sucesso!!",
-                      tipoIcone: "sucess",
-                    });
-                    setTimeout(() => {
-                      this.setState({ openIP: false });
-                    }, 1000);
-                  }, 1000);
-                }, 4000);
-              }, 2000);
-            }, 1000);
-          }, 1000);
-        }, 20000);
-      }
+      this.atualizacao(data.ip);
     }
   };
 
@@ -457,14 +494,36 @@ export default class FormDatabase extends React.Component {
 
         <View style={Style.ajustaCampos}>
           <Text style={StyleIp.alinhaLabel}>Informe o IP de Atualização</Text>
-
-          <InputPattern
-            value={this.state.ip}
-            mask='NOT-VIRGULA'
-            handleClick={this.setIp}
-            keyboardType="numeric"
-          />
-
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <InputPattern
+                value={this.state.ip}
+                mask="NOT-VIRGULA"
+                handleClick={this.setIp}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={{ alignItems: "flex-end" }}>
+              <TouchableOpacity
+                style={Style.botaoQR}
+                onPress={() => {
+                  this.props.navigation.navigate("qrcode");
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={require("../../../assets/qrcode.png")}
+                    style={{ width: 30, height: 35 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
           <Text style={{ textAlign: "center", padding: 25 }}>
             Para realizar a atualização dos dados, é necessário informar o IP de
             atualização fornecido pelo servidor de atualização.
@@ -481,12 +540,13 @@ export default class FormDatabase extends React.Component {
         </TouchableOpacity>
 
         <MsgModal
-          mensagem={this.state.mensagem}          
+          mensagem={this.state.mensagem}
           open={this.state.open}
           execute={this.openModal}
         />
         <ModalIP
           open={this.state.openIP}
+          execute={this.openModalIP}
           mensagem={this.state.mensagemIP}
           tipoIcone={this.state.tipoIcone}
         />
