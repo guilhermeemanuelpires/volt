@@ -1,7 +1,7 @@
 import { createConnection } from 'typeorm';
 import * as http from 'http';
 import app from './app';
-import getIPAddresses from './util/getIPAddresses'
+var opn = require('opn');
 
 createConnection().then(connection => {
 
@@ -9,7 +9,7 @@ createConnection().then(connection => {
 
     server.listen(3000, () => {
         console.log('Applicação está rodando na porta 3000');
-        console.log('O IP de Atualização é '  + getIPAddresses());                
+        opn('http://localhost:3000/');        
     });
 
 }).catch(error => {
