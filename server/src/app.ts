@@ -2,6 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 
+import qrCodeRouter from "./routers/qrCode.router"
 import ModuloRouter from "./routers/modulo.router";
 import CidadesRouter from "./routers/cidade.router";
 import cidadeMediaRouter from "./routers/cidadeMedia.router";
@@ -26,6 +27,7 @@ class App {
   }
 
   private routes(): void {
+    this.express.use("/", qrCodeRouter);
     this.express.use("/modulo", ModuloRouter);
     this.express.use("/media", cidadeMediaRouter);
     this.express.use("/cidade", CidadesRouter);

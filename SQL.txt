@@ -529,4 +529,9 @@ insert INTO `volt`.`calculo_kwp` ( `POTEN1`, `POTEN2`, `TELHADO`, `SOLO`, `codPa
 insert INTO `volt`.`calculo_kwp` ( `POTEN1`, `POTEN2`, `TELHADO`, `SOLO`, `codPadraoId`) VALUES ('35', 50, 3450, 3950, 5);
 insert INTO `volt`.`calculo_kwp` ( `POTEN1`, `POTEN2`, `TELHADO`, `SOLO`, `codPadraoId`) VALUES ('51', 82, 3200, 3700, 5);
 insert INTO `volt`.`calculo_kwp` ( `POTEN1`, `POTEN2`, `TELHADO`, `SOLO`, `codPadraoId`) VALUES ('83', 300, 3200, 3700, 5);
+
+/* Insert tipo_instalacao */
+INSERT INTO volt.tipo_instalacao(id, descricao) VALUES(1, 'SOLO');
+INSERT INTO volt.tipo_instalacao(id, descricao) VALUES(2, 'TELHADO');
+
          
