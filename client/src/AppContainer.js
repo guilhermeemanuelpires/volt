@@ -10,11 +10,11 @@ import Button from "../src/view/components/button/Button";
 import CustomText from "../src/view/components/button/CustomText";
 import { WebView } from 'react-native-webview';
 
-const createPdf = (htmlFactory) => async () => {
+const createPdf = (htmlFactory, val) => async () => {
   try {
     const html = await htmlFactory();
     if (html) {
-      await createAndSavePDF(html);
+      await createAndSavePDF(html, val);
       Alert.alert("Sucesso!", "O documento foi salvo com sucesso!");
     }
   } catch (error) {
@@ -67,7 +67,7 @@ export default function AppContainer(props) {
     () => [
       {
         title: "Teste PDF",
-        action: createPdf(htmlWithImage(useImageFromAssetsState[0], valores )),
+        action: createPdf(htmlWithImage(useImageFromAssetsState[0], valores ), valores),
         switches: [
           {
             label: "Use image from assets",

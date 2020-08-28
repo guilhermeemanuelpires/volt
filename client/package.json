@@ -17,6 +17,7 @@
     "apisauce": "^1.1.2",
     "expo": "~38.0.8",
     "expo-asset": "~8.1.7",
+    "expo-barcode-scanner": "~8.2.1",
     "expo-image-manipulator": "~8.2.1",
     "expo-media-library": "~8.2.1",
     "expo-print": "~9.0.1",

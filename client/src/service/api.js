@@ -5,7 +5,7 @@ async function getModulo(ip) {
     const responseJson = await response.json();
     return responseJson["Modulo"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -16,7 +16,7 @@ async function getCidade(ip) {
     const responseJson = await response.json();
     return responseJson["Cidades"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -27,7 +27,7 @@ async function getMedia(ip) {
     const responseJson = await response.json();
     return responseJson["Media"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -38,7 +38,7 @@ async function getTarifa(ip) {
     const responseJson = await response.json();
     return responseJson["Tarifa"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -49,7 +49,7 @@ async function getTipoRede(ip) {
     const responseJson = await response.json();
     return responseJson["Padroes"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -60,7 +60,7 @@ async function getDisjuntor(ip) {
     const responseJson = await response.json();
     return responseJson["Disjutores"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -71,7 +71,7 @@ async function getTipoInstall(ip) {
     const responseJson = await response.json();
     return responseJson["Tipos"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 
@@ -82,7 +82,7 @@ async function getCalculoKWP(ip) {
     const responseJson = await response.json();
     return responseJson["CalculoKWP"];
   } catch (error) {
-    return "Error";
+    throw "PIPOCOU";
   }
 }
 

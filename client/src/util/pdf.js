@@ -63,7 +63,7 @@ export const createHTML = ({
     `;
 };
 
-export const createAndSavePDF = async (html) => {
+export const createAndSavePDF = async (html, val) => {
   try {
     let isShared = false;
     const { uri } = await Print.printToFileAsync({ html });
@@ -73,7 +73,13 @@ export const createAndSavePDF = async (html) => {
       const permission = await MediaLibrary.requestPermissionsAsync();
 
       if (permission.granted) {
-        await MediaLibrary.createAssetAsync(uri);
+
+        const asset = await MediaLibrary.createAssetAsync(uri);
+        asset.filename = "Orcamento" + val.nomeCli.trim() +".pdf"
+        // asset.uri = "file:///storage/emulated/0/Volt Orçamento/OrcamentoDouglasCezaro.pdf"
+        MediaLibrary.createAlbumAsync('Volt Orçamento', asset)
+        MediaLibrary.getAssetInfoAsync(asset)
+        console.log(asset)
         isShared = true;
       }
     }

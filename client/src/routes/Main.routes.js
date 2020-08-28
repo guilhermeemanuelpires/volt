@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -7,24 +7,21 @@ import {
 import { Image, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FormCli from "../view/formCliente/index";
-import FormDatabase from "../view/formDatabase/index"
-import { DatabaseConnection } from '../database/connection';
+import FormDatabase from "../view/formDatabase/index";
+import { DatabaseConnection } from "../database/connection";
 
 const Drawer = createDrawerNavigator();
 const Content = (props) => {
   return (
     <DrawerContentScrollView {...props}>
-      <View 
-      style={{ alignItems:"center" }}
-      >
-      <Image
-      source={require("../../assets/volt.png")}
-      style={{ width: 250, height: 100}}
-    />
-    </View>
+      <View style={{ alignItems: "center" }}>
+        <Image
+          source={require("../../assets/volt.png")}
+          style={{ width: 250, height: 100 }}
+        />
+      </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
-    
   );
 };
 
@@ -43,7 +40,6 @@ export default function MainRoutes() {
       <Drawer.Screen
         name="Atualizar Dados"
         component={FormDatabase}
-
         options={{
           drawerIcon: ({ size }) => (
             <MaterialCommunityIcons name="refresh" color="#000" size={size} />
@@ -53,3 +49,4 @@ export default function MainRoutes() {
     </Drawer.Navigator>
   );
 }
+
