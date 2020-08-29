@@ -198,7 +198,7 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
 
@@ -224,7 +224,7 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
 
@@ -276,7 +276,7 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
 
@@ -328,7 +328,7 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
   newTipoInstall = async (data) => {
@@ -365,14 +365,13 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
   newCalculo = async (data) => {
     try{
     const CalculoKWP = await listar.getCalculoKWP(data);
       this.setState({ CalculoKWP });
-      console.log(this.state.CalculoKWP.length);
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM calculo_kwp");
         for (let x = 0; x < this.state.CalculoKWP.length; x++) {
@@ -403,19 +402,18 @@ export default class FormDatabase extends Component {
         }
       });
     }catch (error) {
-      throw "PIPOCOU";
+      return "Error"
     }
   };
-
   atualizacao = async (data) => {
     try {
       const valida = await this.newModulos(data);
-      this.newCidades(data);
+      this.newModulos(data);
       this.setState({ openIP: true });
-      this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
+      this.setState({ mensagemIP: "Atualizando Tabela Módulos" });
       setTimeout(() => {
-        this.newModulos(data);
-        this.setState({ mensagemIP: "Atualizando Tabela Módulos" });
+        this.newCidades(data);
+        this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
         setTimeout(() => {
           this.newTarifas(data);
           this.setState({ mensagemIP: "Atualizando Tabela Tarifas" });
@@ -448,8 +446,8 @@ export default class FormDatabase extends Component {
               }, 4000);
             }, 2000);
           }, 1000);
-        }, 1000);
-      }, 20000);
+        }, 20000);
+      }, 1000);
     } catch (e) {
       this.setState({ openIP: true });
       this.setState({ mensagemIP: "Erro ao atualizar os dados!!" });

@@ -188,7 +188,6 @@ export default class formConfOrcamento extends Component {
           [potencia_instalada, potencia_instalada, this.state.tipoRedeID],
           (trans, result) => {
             this.setState({ calculo_kwp: result["rows"]._array });
-            console.log(this.state.calculo_kwp.length)
             var val = 0
             var desc = 'SOLO'
             var valorFinal = 0
