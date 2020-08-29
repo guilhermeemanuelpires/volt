@@ -6,7 +6,7 @@
     "password": "root",
     "database": "volt",
     "synchronize": false,
-    "logging": ["query", "error"],
+    "logging": ["error"],
     "entities": [
       "src/entity/*.ts"
     ],

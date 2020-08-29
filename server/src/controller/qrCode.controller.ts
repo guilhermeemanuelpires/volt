@@ -5,7 +5,7 @@ import getIPAddresses from '../util/getIPAddresses'
 class qrCode {
     public async getQrCode(req: Request, res: Response) {
         try {
-            var svg_string = qr.imageSync('volt/' + String(getIPAddresses()), { type: 'svg', size: 20 });
+            var svg_string = qr.imageSync('volt/' + String(getIPAddresses()), { type: 'svg', size: 10 });
 
             const HTML = `<div style = "text-align: center; padding-top: 10%;">
                         <h2>Utilize o <b>IP</b> ou <b>QrCode</b> para realizar a atualização dos dados no Aplicativo Volt Orçamento </h2>

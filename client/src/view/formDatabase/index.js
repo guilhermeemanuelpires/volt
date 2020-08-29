@@ -24,41 +24,41 @@ export default class FormDatabase extends Component {
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS modulo " +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "modelo TEXT, descricao TEXT, potencia DOUBLE," +
-          "area DOUBLE, eficiencia DOUBLE, peso DOUBLE," +
-          "garantia1 INT, garantia2 INT)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "modelo TEXT, descricao TEXT, potencia DOUBLE," +
+        "area DOUBLE, eficiencia DOUBLE, peso DOUBLE," +
+        "garantia1 INT, garantia2 INT)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS cidade " +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "nome TEXT, cep TEXT, media DOUBLE)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "nome TEXT, cep TEXT, media DOUBLE)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS tarifa" +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "valor DOUBLE)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "valor DOUBLE)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS padroes_entrada" +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "descricao TEXT, minimo DOUBLE, coluna1 INT, solo INT)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "descricao TEXT, minimo DOUBLE, coluna1 INT, solo INT)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS disj_entrada" +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "descricao TEXT, demanda INT, amper INT, codPadrao INT)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "descricao TEXT, demanda INT, amper INT, codPadrao INT)"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS tipo_instalacao" +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "descricao TEXT)"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "descricao TEXT)"
       );
 
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS calculo_kwp" +
-          "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-          "POTEN1 DOUBLE, POTEN2 DOUBLE, TELHADO INTEGER, SOLO INTEGER, codPadrao INTEGER )"
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "POTEN1 DOUBLE, POTEN2 DOUBLE, TELHADO INTEGER, SOLO INTEGER, codPadrao INTEGER )"
       );
     });
     this.state = {
@@ -101,9 +101,6 @@ export default class FormDatabase extends Component {
   openModal = (open) => {
     this.setState({ open });
   };
-  openModalIP = (openIP) => {
-    this.setState({ openIP });
-  };
 
   newModulos = async (data) => {
     try {
@@ -113,7 +110,7 @@ export default class FormDatabase extends Component {
         tx.executeSql("DELETE FROM modulo");
         tx.executeSql(
           "INSERT INTO modulo (id, modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [0, "Selecione", "Selecione", 0, 0, 0, 0, 0, 0],
           (txObj, resultSet) =>
             this.setState({
@@ -134,7 +131,7 @@ export default class FormDatabase extends Component {
         for (let x = 0; x < this.state.modulos.length; x++) {
           tx.executeSql(
             "INSERT INTO modulo (id, modelo, descricao, potencia, area, eficiencia, peso, garantia1, garantia2 )" +
-              "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
               this.state.modulos[x].id,
               this.state.modulos[x].modelo,
@@ -170,8 +167,8 @@ export default class FormDatabase extends Component {
   };
   newCidades = async (data) => {
     try {
-    const cidades = await listar.getCidade(data);
-    const medias = await listar.getMedia(data);
+      const cidades = await listar.getCidade(data);
+      const medias = await listar.getMedia(data);
       this.setState({ cidades, medias });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM cidade");
@@ -197,14 +194,14 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
 
   newTarifas = async (data) => {
-    try{
-    const tarifas = await listar.getTarifa(data);
+    try {
+      const tarifas = await listar.getTarifa(data);
       this.setState({ tarifas });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tarifa");
@@ -223,20 +220,20 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
 
   newPadroes_Entrada = async () => {
-    try{
-    const tipoRede = await listar.getTipoRede(this.state.ip);
+    try {
+      const tipoRede = await listar.getTipoRede(this.state.ip);
       this.setState({ tipoRede });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM padroes_entrada");
         tx.executeSql(
           "INSERT INTO padroes_entrada (id, descricao, minimo, coluna1, solo)" +
-            "values (?, ?, ?, ?, ?)",
+          "values (?, ?, ?, ?, ?)",
           [0, "Selecione", 0, 0, 0],
           (txObj, resultSet) =>
             this.setState({
@@ -253,7 +250,7 @@ export default class FormDatabase extends Component {
         for (let x = 0; x < this.state.tipoRede.length; x++) {
           tx.executeSql(
             "INSERT INTO padroes_entrada (id, descricao, minimo, coluna1, solo)" +
-              "values (?, ?, ?, ?, ?)",
+            "values (?, ?, ?, ?, ?)",
             [
               this.state.tipoRede[x].id,
               this.state.tipoRede[x].descricao,
@@ -275,20 +272,20 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
 
   newDisjuntores = async (data) => {
-    try{
-    const Disjuntores = await listar.getDisjuntor(data);
+    try {
+      const Disjuntores = await listar.getDisjuntor(data);
       this.setState({ Disjuntores });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM disj_entrada");
         tx.executeSql(
           "INSERT INTO disj_entrada (id, descricao, demanda, amper, codPadrao)" +
-            "values (?, ?, ?, ?, ?)",
+          "values (?, ?, ?, ?, ?)",
           [0, "Selecione", 0, 0, 0],
           (txObj, resultSet) =>
             this.setState({
@@ -305,7 +302,7 @@ export default class FormDatabase extends Component {
         for (let x = 0; x < this.state.Disjuntores.length; x++) {
           tx.executeSql(
             "INSERT INTO disj_entrada (id, descricao, demanda, amper, codPadrao)" +
-              "values (?, ?, ?, ?, ?)",
+            "values (?, ?, ?, ?, ?)",
             [
               this.state.Disjuntores[x].id,
               this.state.Disjuntores[x].descricao,
@@ -327,13 +324,13 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
   newTipoInstall = async (data) => {
-    try{
-    const tipoInstall = await listar.getTipoInstall(data);
+    try {
+      const tipoInstall = await listar.getTipoInstall(data);
       this.setState({ tipoInstall });
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tipo_instalacao");
@@ -364,13 +361,13 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
   newCalculo = async (data) => {
-    try{
-    const CalculoKWP = await listar.getCalculoKWP(data);
+    try {
+      const CalculoKWP = await listar.getCalculoKWP(data);
       this.setState({ CalculoKWP });
       console.log(this.state.CalculoKWP.length);
       db.transaction((tx) => {
@@ -378,7 +375,7 @@ export default class FormDatabase extends Component {
         for (let x = 0; x < this.state.CalculoKWP.length; x++) {
           tx.executeSql(
             "INSERT INTO calculo_kwp (id, POTEN1, POTEN2, TELHADO, SOLO, codPadrao)" +
-              "values (?, ?, ?, ?, ?, ?)",
+            "values (?, ?, ?, ?, ?, ?)",
             [
               this.state.CalculoKWP[x].id,
               this.state.CalculoKWP[x].POTEN1,
@@ -402,7 +399,7 @@ export default class FormDatabase extends Component {
           );
         }
       });
-    }catch (error) {
+    } catch (error) {
       throw "PIPOCOU";
     }
   };
@@ -500,7 +497,7 @@ export default class FormDatabase extends Component {
               justifyContent: "space-between",
             }}
           >
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingTop: 23 }}>
               <InputPattern
                 value={this.state.ip}
                 mask="NOT-VIRGULA"
@@ -518,15 +515,14 @@ export default class FormDatabase extends Component {
                 <View style={{ alignItems: "center" }}>
                   <Image
                     source={require("../../../assets/qrcode.png")}
-                    style={{ width: 30, height: 35 }}
+                    style={{ width: 40, height: 40 }}
                   />
                 </View>
               </TouchableOpacity>
             </View>
           </View>
           <Text style={{ textAlign: "center", padding: 25 }}>
-            Para realizar a atualização dos dados, é necessário informar o IP de
-            atualização fornecido pelo servidor de atualização.
+            Para realizar a atualização dos dados, é necessário informar o IP de atualização ou escanear o Qr-Code fornecido pelo servidor de atualização.
           </Text>
         </View>
 
@@ -546,7 +542,6 @@ export default class FormDatabase extends Component {
         />
         <ModalIP
           open={this.state.openIP}
-          execute={this.openModalIP}
           mensagem={this.state.mensagemIP}
           tipoIcone={this.state.tipoIcone}
         />

@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import Dropdow from "../components/dropdown/index";
 import ModalCalculo from "../components/modalCalc/index";
@@ -34,7 +35,7 @@ export default class formConfOrcamento extends Component {
         'TELHADO': 0,
         'SOLO': 0
       }],
-      
+
       disjuntorSel: "",
       disjuntores: [],
 
@@ -193,11 +194,11 @@ export default class formConfOrcamento extends Component {
             var desc = 'SOLO'
             var valorFinal = 0
             var valorKW_R = 0
-            if(this.state.calculo_kwp.length > 0){
-               val = this.state.calculo_kwp[0];
-               desc = this.state.instalacaoDesc;
-               valorFinal = this.state.calculoPotenciaInstalada * val[desc];
-               valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
+            if (this.state.calculo_kwp.length > 0) {
+              val = this.state.calculo_kwp[0];
+              desc = this.state.instalacaoDesc;
+              valorFinal = this.state.calculoPotenciaInstalada * val[desc];
+              valorKW_R = valorFinal / this.state.calculoPotenciaInstalada;
             }
 
             const investimento_proposto = Calculos.investimento(
@@ -256,7 +257,7 @@ export default class formConfOrcamento extends Component {
     } else if (orcamentoConfig.mediaConsumoMes <= 0) {
       return "A Média de Consumo Mês deve ser maior que zero"
     }
-    
+
     if (!orcamentoConfig.taxaPerda) {
       return "Informe a taxa Perda";
     } else if (orcamentoConfig.taxaPerda <= 0) {
@@ -268,6 +269,7 @@ export default class formConfOrcamento extends Component {
   }
 
   _onValidaFom = () => {
+    var valid = true;
     const orcamentoConfig = {
       tipoRedeSel: this.state.tipoRedeSel,
       disjuntorSel: this.state.disjuntorSel,
@@ -278,6 +280,21 @@ export default class formConfOrcamento extends Component {
       moduloSel: this.state.moduloSel,
     };
 
+    try {
+      var a = Number(orcamentoConfig.mediaConsumoMes);
+      var b = Number(orcamentoConfig.taxaPerda);
+      if (isNaN(a)) {
+        throw 'O Valor do campo Média de Consumo Mês é inválido'
+      } else if (isNaN(b)) {
+        throw 'O Valor do campo Taxa de Perda é inválido'
+      }
+    } catch (error) {
+      const msg = error;
+      this.setState({ mensagem: msg });
+      this.openModal(true);
+      return false;
+    }
+
     if (
       orcamentoConfig.tipoRedeSel < 1 ||
       orcamentoConfig.disjuntorSel < 1 ||
@@ -286,8 +303,8 @@ export default class formConfOrcamento extends Component {
       orcamentoConfig.moduloSel < 1 ||
       orcamentoConfig.tarifaSel <= 0 ||
       !orcamentoConfig.taxaPerda ||
-      Number(orcamentoConfig.mediaConsumoMes <=0) ||
-      Number(orcamentoConfig.taxaPerda <=0 )
+      Number(orcamentoConfig.mediaConsumoMes <= 0) ||
+      Number(orcamentoConfig.taxaPerda <= 0)
     ) {
       const msg = this._geToMessage(orcamentoConfig);
       this.setState({ mensagem: msg });
@@ -298,9 +315,9 @@ export default class formConfOrcamento extends Component {
     }
   };
 
-  async _Submit (){
+  async _Submit() {
     if (this._onValidaFom()) {
-     await this._Calculos(false)
+      await this._Calculos(false)
       this.props.navigation.navigate("pdf", {
         nomeCli: this.props.route.params.nomeCli,
         potencia_instalada: Mask.notPonto(this.state.calculoPotenciaInstalada),
@@ -407,7 +424,7 @@ export default class formConfOrcamento extends Component {
               value={this.state.mediaConsumoMes}
               handleClick={this.setMediaConsumoMes}
             />
-            <Text style={Style.alinhaLabel}>Taxa Perda</Text>
+            <Text style={Style.alinhaLabel}>Taxa de Perda</Text>
             <InputPattern
               keyboardType="numeric"
               mask="NOT-VIRGULA"
