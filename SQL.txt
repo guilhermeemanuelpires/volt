@@ -22,13 +22,13 @@ END$$
 DELIMITER ;
 
 /*Insert Tarifas*/
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('1', '0.33');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('2', '0.34');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('3', '0.39');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('4', '0.52');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('5', '0.79');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('6', '1.25');
-INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('7', '1.96');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('1', '0.330415');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('2', '0.33929');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('3', '0.39338');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('4', '0.51761');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('5', '0.7945');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('6', '1.253345');
+INSERT INTO `volt`.`tarifas` (`id`, `valor`) VALUES ('7', '1.960205');
 
 /*Insert Modulos*/
 INSERT INTO volt.modulo
