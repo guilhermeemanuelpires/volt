@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Style from "../view/styles/styles";
 
@@ -17,7 +17,7 @@ export default function App(props, navigation) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     props.navigation.navigate("database", {
-        ip: data 
+      ip: data,
     });
   };
 
@@ -25,7 +25,11 @@ export default function App(props, navigation) {
     return <Text>Necessita permissões para acessar a camera</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    Alert.alert("Erro!", "Sem acesso a camera!!");
+    props.navigation.navigate("FormCli", {
+      screen: "database",
+    });
+    return <Text> Sem acesso a camera!!</Text>;
   }
 
   return (

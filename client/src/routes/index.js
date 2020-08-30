@@ -58,14 +58,6 @@ export default function Routes() {
         })}
       />
       <Stack.Screen
-        name="databasee"
-        component={formConfOrcamento}
-        options={({ navigation }) => ({
-          title: "Volt Orçamento",
-          backgroundColor: "#0A7ABF",
-        })}
-      />
-      <Stack.Screen
         name="database"
         component={database}
         options={({ navigation }) => ({

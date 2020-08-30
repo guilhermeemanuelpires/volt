@@ -17,7 +17,7 @@ export default class ModalIP extends Component {
     switch (this.props.tipoIcone) {
       case "loading":
         return <ActivityIndicator size="large" color="#0000ff" />;
-      case "sucess":
+      case "success":
         return <Image source={require("../../../../assets/sucess.png")} />;
       case "error":
         return <Image source={require("../../../../assets/error.png")} />;
