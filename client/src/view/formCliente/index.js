@@ -4,8 +4,8 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,  
-  Image
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import InputPattern from "../components/InputPattern/index";
 import MsgModal from "../components/modal/index";
@@ -17,7 +17,6 @@ import ModalCidade from "../components/modalCidade/index";
 
 var db = null;
 export default class FormCli extends Component {
-
   constructor(props) {
     super(props);
     db = DatabaseConnection.getConnection();
@@ -34,15 +33,12 @@ export default class FormCli extends Component {
       bntActive: true,
       open: false,
       mensagem: "",
-      openTeste: ""
+      openTeste: "",
     };
   }
 
   componentDidMount() {
-    this.listCidades()
-  }
-  componentDidUpdate() {
-    this.listCidades()
+    this.listCidades();
   }
   setNome = (nome) => {
     this.setState({ nome });
@@ -78,15 +74,16 @@ export default class FormCli extends Component {
 
   openModalTeste = (openTeste) => {
     this.setState({ openTeste });
+    this.listCidades();
   };
 
   setSelecionados = (item) => {
     this.setState({
       cidadeSel: item.media.toFixed(2),
       cep: item.cep,
-      cidadeDesc: item.name
+      cidadeDesc: item.name,
     });
-  }
+  };
 
   _geToMessage(cliente) {
     if (!cliente.nome) return "Necessário informar o Nome do Cliente";
@@ -112,7 +109,11 @@ export default class FormCli extends Component {
       this.setState({ mensagem: msg });
       this.openModal(true);
     } else {
-      this.props.navigation.navigate('formConfOrcamento', {media: this.state.cidadeSel, nomeCli: this.state.nome, cidade: this.state.cidadeDesc})
+      this.props.navigation.navigate("formConfOrcamento", {
+        media: this.state.cidadeSel,
+        nomeCli: this.state.nome,
+        cidade: this.state.cidadeDesc,
+      });
     }
   };
 
@@ -147,7 +148,6 @@ export default class FormCli extends Component {
         <Text style={Style.titulo}>Dados Do Cliente</Text>
 
         <ScrollView>
-
           <View style={Style.ajustaCampos}>
             <Text style={Style.alinhaLabel}>Finame</Text>
             <InputPattern value={this.state.finame} editable={false} />
@@ -187,20 +187,22 @@ export default class FormCli extends Component {
               }}
             >
               <View style={{ flex: 0.8 }}>
-                <TextInput style={Style.inputPiker}
+                <TextInput
+                  style={Style.inputPiker}
                   onPress={() => this.openModalTeste(true)}
                   editable={false}
                   value={this.state.cidadeDesc}
                 />
               </View>
               <View style={{ flex: 0.2 }}>
-                <TouchableOpacity                  
+                <TouchableOpacity
                   style={Style.botaoLupa}
                   onPress={() => this.openModalTeste(true)}
                 >
                   <Image
                     source={require("../../../assets/lupa.png")}
                     style={{ width: 28, height: 28, margin: 5}}
+
                   />
                 </TouchableOpacity>
               </View>
@@ -222,7 +224,7 @@ export default class FormCli extends Component {
               keyboardType="number-pad"
             />
           </View>
-        </ScrollView >
+        </ScrollView>
 
         <TouchableOpacity
           style={!this.state.bntActive ? Style.botaoDisabled : Style.botao}
@@ -246,7 +248,6 @@ export default class FormCli extends Component {
           cidades={this.state.cidades}
           selecionado={this.setSelecionados}
         />
-
       </View>
     );
   }

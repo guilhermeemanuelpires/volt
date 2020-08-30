@@ -88,7 +88,7 @@ export default class FormDatabase extends Component {
         this.setState({ ip: array[1] });
         this.atualizacao(array[1]);
       } else {
-        alert("QRCODE Inválido!!");
+        Alert.alert("Atenção!", "QRCODE Inválido!!");
         this.props.navigation.navigate("FormCli");
       }
     }
@@ -106,6 +106,11 @@ export default class FormDatabase extends Component {
     try {
       const modulos = await listar.getModulo(data);
       this.setState({ modulos });
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({ mensagemIP: "Atualizando Tabela Módulos" });
+      }, 1000);
+
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM modulo");
         tx.executeSql(
@@ -162,11 +167,18 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Módulos!",
+      });
       throw "PIPOCOU";
     }
   };
   newCidades = async (data) => {
     try {
+      this.setState({ openIP: true });
+      this.setState({ tipoIcone: "loading" });
+      this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
       const cidades = await listar.getCidade(data);
       const medias = await listar.getMedia(data);
       this.setState({ cidades, medias });
@@ -195,6 +207,25 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({ mensagemIP: "Erro ao atualizar os dados!!" });
+      setTimeout(() => {
+        this.setState({ mensagemIP: "Valide se o IP está correto!!" });
+        setTimeout(() => {
+          this.setState({
+            mensagemIP: "Verifique se o servidor está funcionando!",
+          });
+          setTimeout(() => {
+            this.setState({
+              mensagemIP: "Utilize o QRCODE para facilitar!",
+            });
+            setTimeout(() => {
+              this.setState({ openIP: false });
+              this.props.navigation.navigate("FormCli");
+            }, 1500);
+          }, 1500);
+        }, 1500);
+      }, 1500);
       throw "PIPOCOU";
     }
   };
@@ -203,6 +234,12 @@ export default class FormDatabase extends Component {
     try {
       const tarifas = await listar.getTarifa(data);
       this.setState({ tarifas });
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({
+          mensagemIP: "Atualizando tabela Tarifas",
+        });
+      }, 1000);
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tarifa");
         for (let x = 0; x < this.state.tarifas.length; x++) {
@@ -221,6 +258,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Tarifa!",
+      });
       throw "PIPOCOU";
     }
   };
@@ -229,6 +270,11 @@ export default class FormDatabase extends Component {
     try {
       const tipoRede = await listar.getTipoRede(this.state.ip);
       this.setState({ tipoRede });
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({ mensagemIP: "Atualizando Tabela Tipo de Rede" });
+      }, 1500);
+
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM padroes_entrada");
         tx.executeSql(
@@ -273,6 +319,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Tipo de Rede!",
+      });
       throw "PIPOCOU";
     }
   };
@@ -281,6 +331,10 @@ export default class FormDatabase extends Component {
     try {
       const Disjuntores = await listar.getDisjuntor(data);
       this.setState({ Disjuntores });
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({ mensagemIP: "Atualizando Tabela Disjuntores" });
+      }, 1000);
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM disj_entrada");
         tx.executeSql(
@@ -325,6 +379,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Disjuntores!",
+      });
       throw "PIPOCOU";
     }
   };
@@ -332,6 +390,13 @@ export default class FormDatabase extends Component {
     try {
       const tipoInstall = await listar.getTipoInstall(data);
       this.setState({ tipoInstall });
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({
+          mensagemIP: "Atualizando Tabela Tipo Instalação",
+        });
+      }, 1000);
+
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM tipo_instalacao");
         tx.executeSql(
@@ -362,6 +427,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Tipo Instalação!",
+      });
       throw "PIPOCOU";
     }
   };
@@ -369,7 +438,11 @@ export default class FormDatabase extends Component {
     try {
       const CalculoKWP = await listar.getCalculoKWP(data);
       this.setState({ CalculoKWP });
-      console.log(this.state.CalculoKWP.length);
+      setTimeout(() => {
+        this.setState({ tipoIcone: "loading" });
+        this.setState({ mensagemIP: "Atualizando Tabela Calculo KWP" });
+      }, 1000);
+
       db.transaction((tx) => {
         tx.executeSql("DELETE FROM calculo_kwp");
         for (let x = 0; x < this.state.CalculoKWP.length; x++) {
@@ -400,71 +473,34 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
+      this.setState({ tipoIcone: "error" });
+      this.setState({
+        mensagemIP: "Erro ao atualizar ao atualizar tabela Calculo KWP!",
+      });
       throw "PIPOCOU";
     }
   };
-
   atualizacao = async (data) => {
     try {
-      const valida = await this.newModulos(data);
-      this.newCidades(data);
-      this.setState({ openIP: true });
-      this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
+      const validaCidades = await this.newCidades(data);
+      const validaModulos = await this.newModulos(data);
+      const validaDisjuntores = await this.newDisjuntores(data);
+      const validaPadroes = await this.newPadroes_Entrada(data);
+      const validaTarifas = await this.newTarifas(data);
+      const validaTipoInstall = await this.newTipoInstall(data);
+      const validaCalculo = await this.newCalculo(data);
       setTimeout(() => {
-        this.newModulos(data);
-        this.setState({ mensagemIP: "Atualizando Tabela Módulos" });
+        this.setState({ tipoIcone: "success" });
+        this.setState({ mensagemIP: "Atualização concluída com sucesso!!" });
         setTimeout(() => {
-          this.newTarifas(data);
-          this.setState({ mensagemIP: "Atualizando Tabela Tarifas" });
-          setTimeout(() => {
-            this.newPadroes_Entrada(data);
-            this.setState({ mensagemIP: "Atualizando Tabela Tipo de Rede" });
-            setTimeout(() => {
-              this.newDisjuntores(data);
-              this.newCalculo(data);
-              this.setState({
-                mensagemIP: "Atualizando Tabela Disjuntores Padrão",
-              });
-              setTimeout(() => {
-                this.newTipoInstall(data);
-                this.setState({
-                  mensagemIP: "Atualizando Tabela Tipo Instalação",
-                });
-                setTimeout(() => {
-                  this.setState({
-                    mensagemIP: "Concluído com Sucesso!!",
-                    tipoIcone: "sucess",
-                  });
-                  setTimeout(() => {
-                    this.setState({ openIP: false });
-                    if (this.props.route.params) {
-                      this.props.navigation.navigate("FormCli");
-                    }
-                  }, 1000);
-                }, 2000);
-              }, 4000);
-            }, 2000);
-          }, 1000);
-        }, 1000);
-      }, 20000);
+          this.props.navigation.navigate("FormCli");
+        }, 3000);
+      }, 3000);
     } catch (e) {
-      this.setState({ openIP: true });
-      this.setState({ mensagemIP: "Erro ao atualizar os dados!!" });
-      this.setState({ tipoIcone: "error" });
       setTimeout(() => {
-        this.setState({ mensagemIP: "Valide se o IP está correto!!" });
-        setTimeout(() => {
-          this.setState({
-            mensagemIP: "Verifique se o servidor está funcionando!",
-          });
-          setTimeout(() => {
-            this.setState({ mensagemIP: "Utilize o QRCODE para facilitar!!" });
-            setTimeout(() => {
-              this.props.navigation.navigate("FormCli");
-            }, 1500);
-          }, 1500);
-        }, 1500);
-      }, 1500);
+        this.setState({ openIP: false });
+        this.props.navigation.navigate("FormCli");
+      }, 2500);
     }
   };
 
