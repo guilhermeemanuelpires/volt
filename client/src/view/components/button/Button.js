@@ -15,7 +15,7 @@ export default function Button({
   title = "",
   ...props
 }) {
-    const shouldDisable = !!isLoading || !!disabled;
+  const shouldDisable = !!isLoading || !!disabled;
   return (
     <TouchableOpacity
       activeOpacity={shouldDisable ? 0.6 : 0.8}
@@ -26,8 +26,8 @@ export default function Button({
       {!!isLoading ? (
         <ActivityIndicator size="small" color={COLORS.black} />
       ) : (
-        <CustomText bold style={[styles.title, titleStyle]}>{title}</CustomText>
-      )}
+          <CustomText bold style={[styles.title, titleStyle]}>{title}</CustomText>
+        )}
     </TouchableOpacity>
   );
 }
@@ -50,11 +50,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
   },
   title: {
-    fontSize: 16,
-    textTransform: "uppercase",
+    fontSize: 18,
     textAlign: "center",
+    fontWeight: 'bold',
+    color: '#FFFFFF'
   },
   disabledState: {
-      opacity: 0.6
+    opacity: 0.6
   }
 });

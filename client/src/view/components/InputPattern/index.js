@@ -36,8 +36,8 @@ export default class InputPattern extends Component {
             if (this.props.mask == 'CEP') {
                 result = Mask.cepMask(result);
             }
-
             if (this.props.mask == 'NOT-VIRGULA') {
+
                 result = Mask.notVirgula(result);
             }
         }
@@ -49,7 +49,6 @@ export default class InputPattern extends Component {
         return (
             <TextInput
                 style={(this.state.isFocused) ? Style.inputSelected : Style.input}
-
                 value={this.props.value}
                 editable={this.props.editable}
                 keyboardType={this.props.keyboardType}

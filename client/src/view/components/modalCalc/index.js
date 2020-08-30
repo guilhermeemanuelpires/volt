@@ -25,7 +25,7 @@ export default class MsgModal extends Component {
                 transparent={true}
                 visible={this.props.open}
                 onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
+                    this.setModalVisible(!this.props.open)
                 }}
             >
                 <View style={styles.centeredView}>

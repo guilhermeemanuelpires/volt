@@ -102,14 +102,12 @@ export default styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#51ACFF',
         shadowColor: "#000",
-
         shadowOffset: {
             width: 0,
             height: 6,
         },
         shadowOpacity: 0.4,
         shadowRadius: 50,
-
         elevation: 4,
     },
     botaoDisabled: {

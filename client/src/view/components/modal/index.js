@@ -15,14 +15,14 @@ export default class MsgModal extends Component {
         this.props.execute({ visible })
     }
 
-    render() {        
+    render() {
         return (
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={this.props.open}
                 onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
+                    this.setModalVisible(!this.props.open)
                 }}
             >
                 <View style={styles.centeredView}>
