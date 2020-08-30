@@ -73,10 +73,7 @@ export const createAndSavePDF = async (html, val) => {
       const permission = await MediaLibrary.requestPermissionsAsync();
 
       if (permission.granted) {
-
         const asset = await MediaLibrary.createAssetAsync(uri);
-        MediaLibrary.createAlbumAsync('Volt Orçamento', asset)
-        MediaLibrary.getAssetInfoAsync(asset)
         isShared = true;
       }
     }

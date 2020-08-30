@@ -179,7 +179,6 @@ export default class FormDatabase extends Component {
       this.setState({ openIP: true });
       this.setState({ tipoIcone: "loading" });
       this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
-
       const cidades = await listar.getCidade(data);
       const medias = await listar.getMedia(data);
       this.setState({ cidades, medias });
@@ -223,7 +222,7 @@ export default class FormDatabase extends Component {
             setTimeout(() => {
               this.setState({ openIP: false });
               this.props.navigation.navigate("FormCli");
-            }, 1500);
+            }, 2000);
           }, 1500);
         }, 1500);
       }, 1500);

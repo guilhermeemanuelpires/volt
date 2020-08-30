@@ -28,6 +28,7 @@ export default class FormCli extends Component {
       endereco: "",
       cep: "",
       cidadeSel: "",
+      cidadeRealOficial: 0,
       cidadeDesc: "",
       cidades: [],
       bntActive: true,
@@ -79,6 +80,7 @@ export default class FormCli extends Component {
 
   setSelecionados = (item) => {
     this.setState({
+      cidadeRealOficial: item.media,
       cidadeSel: item.media.toFixed(2),
       cep: item.cep,
       cidadeDesc: item.name,
@@ -110,7 +112,7 @@ export default class FormCli extends Component {
       this.openModal(true);
     } else {
       this.props.navigation.navigate("formConfOrcamento", {
-        media: this.state.cidadeSel,
+        media: this.state.cidadeRealOficial,
         nomeCli: this.state.nome,
         cidade: this.state.cidadeDesc,
       });

@@ -238,9 +238,9 @@ export default class formConfOrcamento extends Component {
       this.setState({
         calculoPotenciaInstalada: potencia_instalada.toFixed(2),
         numeroModulos: num_modulos,
-        calculoPotenciaSistema: potencia_sistema.toFixed(2),
+        calculoPotenciaSistema: potencia_sistema,
         geracaoEstimadaMensal: geracao_estimada.toFixed(2),
-        contaSemVolt: luz_sem_volt.toFixed(2),
+        contaSemVolt: luz_sem_volt,
       });
       this.openModalCalculo(modal);
     }
@@ -268,7 +268,6 @@ export default class formConfOrcamento extends Component {
   }
 
   _onValidaFom = () => {
-    var valid = true;
     const orcamentoConfig = {
       tipoRedeSel: this.state.tipoRedeSel,
       disjuntorSel: this.state.disjuntorSel,
