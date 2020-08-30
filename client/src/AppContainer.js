@@ -2,7 +2,7 @@ import React, { useCallback, useState, useMemo } from "react";
 import { StyleSheet, View, ScrollView, Alert, Image } from "react-native";
 import Constants from "expo-constants";
 import { Container, Header, Content, Form, Item, Input } from "native-base";
-
+import { CommonActions } from '@react-navigation/native';
 import { createAndSavePDF } from "../src/util/pdf";
 import { COLORS, IMAGES } from "../src/util/constants";
 import { simpleHtml, htmlWithImage } from "../src/util/html";
@@ -10,12 +10,22 @@ import Button from "../src/view/components/button/Button";
 import CustomText from "../src/view/components/button/CustomText";
 import { WebView } from 'react-native-webview';
 
-const createPdf = (htmlFactory, val) => async () => {
+
+const createPdf = (htmlFactory, val, props) => async () => {
   try {
     const html = await htmlFactory();
     if (html) {
       await createAndSavePDF(html, val);
       Alert.alert("Sucesso!", "O documento foi salvo com sucesso!");
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'FormCli' },
+          ],
+        })
+      );
+      props.navigation.navigate("FormCli");
     }
   } catch (error) {
     Alert.alert("Error", error.message || "Deu Pau...");
@@ -67,7 +77,7 @@ export default function AppContainer(props) {
     () => [
       {
         title: "Teste PDF",
-        action: createPdf(htmlWithImage(useImageFromAssetsState[0], valores ), valores),
+        action: createPdf(htmlWithImage(useImageFromAssetsState[0], valores ), valores, props),
         switches: [
           {
             label: "Use image from assets",

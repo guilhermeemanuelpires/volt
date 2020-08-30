@@ -75,17 +75,14 @@ export const createAndSavePDF = async (html, val) => {
       if (permission.granted) {
 
         const asset = await MediaLibrary.createAssetAsync(uri);
-        asset.filename = "Orcamento" + val.nomeCli.trim() +".pdf"
-        // asset.uri = "file:///storage/emulated/0/Volt Orçamento/OrcamentoDouglasCezaro.pdf"
         MediaLibrary.createAlbumAsync('Volt Orçamento', asset)
         MediaLibrary.getAssetInfoAsync(asset)
-        console.log(asset)
         isShared = true;
       }
     }
 
     if (!isShared) {
-      throw new Error("Deu Pau...");
+      throw new Error("Erro ao gerar PDF");
     }
   } catch (error) {
     console.log(error);
