@@ -176,18 +176,10 @@ export default class FormDatabase extends Component {
   };
   newCidades = async (data) => {
     try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
       this.setState({ openIP: true });
       this.setState({ tipoIcone: "loading" });
       this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
-      this.setState({ openIP: true });
-      this.setState({ tipoIcone: "loading" });
-      this.setState({ mensagemIP: "Atualizando Tabela Cidades" });
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
+
       const cidades = await listar.getCidade(data);
       const medias = await listar.getMedia(data);
       this.setState({ cidades, medias });
@@ -216,11 +208,6 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       this.setState({ tipoIcone: "error" });
       this.setState({ mensagemIP: "Erro ao atualizar os dados!!" });
       setTimeout(() => {
@@ -240,10 +227,6 @@ export default class FormDatabase extends Component {
           }, 1500);
         }, 1500);
       }, 1500);
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       throw "PIPOCOU";
     }
   };
@@ -276,19 +259,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       this.setState({ tipoIcone: "error" });
       this.setState({
         mensagemIP: "Erro ao atualizar ao atualizar tabela Tarifa!",
       });
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       throw "PIPOCOU";
     }
   };
@@ -346,19 +320,10 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       this.setState({ tipoIcone: "error" });
       this.setState({
         mensagemIP: "Erro ao atualizar ao atualizar tabela Tipo de Rede!",
       });
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       throw "PIPOCOU";
     }
   };
@@ -415,32 +380,17 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       this.setState({ tipoIcone: "error" });
       this.setState({
         mensagemIP: "Erro ao atualizar ao atualizar tabela Disjuntores!",
       });
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       throw "PIPOCOU";
     }
   };
   newTipoInstall = async (data) => {
     try {
       const tipoInstall = await listar.getTipoInstall(data);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
       this.setState({ tipoInstall });
       setTimeout(() => {
         this.setState({ tipoIcone: "loading" });
@@ -479,19 +429,12 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
+
       this.setState({ tipoIcone: "error" });
       this.setState({
         mensagemIP: "Erro ao atualizar ao atualizar tabela Tipo Instalação!",
       });
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
+
       throw "PIPOCOU";
     }
   };
@@ -534,19 +477,12 @@ export default class FormDatabase extends Component {
         }
       });
     } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
+      
       this.setState({ tipoIcone: "error" });
       this.setState({
         mensagemIP: "Erro ao atualizar ao atualizar tabela Calculo KWP!",
       });
-<<<<<<< HEAD
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
+
       throw "PIPOCOU";
     }
   };

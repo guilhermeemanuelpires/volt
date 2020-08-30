@@ -201,16 +201,7 @@ export default class FormCli extends Component {
                 >
                   <Image
                     source={require("../../../assets/lupa.png")}
-<<<<<<< HEAD
-<<<<<<< HEAD
                     style={{ width: 28, height: 28, margin: 5}}
-=======
-                    style={{ width: 30, height: 30, margin: 5 }}
->>>>>>> d14b2f5c91112064d6ff724ce22d233eb48887ce
-=======
-                    style={{ width: 28, height: 28, margin: 5}}
-
->>>>>>> a4d641dfe4ac6ea4cb7a7401f566a8384f1962ca
                   />
                 </TouchableOpacity>
               </View>
